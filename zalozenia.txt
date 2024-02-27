@@ -1,0 +1,18 @@
+node z express, socket
+react??
+
+makao na przeglądarke
+zpisać podstawowe zasady
+modularność?
+baza danych i konta
+skiny do kart - opcjonalnie
+
+
+
+
+
+
+Legenda:
+? -> jak to zaimplementować
+?? -> czy to zrobić i czy tak to jak
+??? -> o chuj chodzi
