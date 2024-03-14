@@ -1,16 +1,18 @@
 {
-  "name": "makao.uz",
-  "version": "1.0.0",
-  "description": "Expandable Makao card game.",
-  "main": "index.js",
+  "name": "makao-uz",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "node": "^20.5.1",
-    "socket.io": "^4.5.4"
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.5"
   }
 }
