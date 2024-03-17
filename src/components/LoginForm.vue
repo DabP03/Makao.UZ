@@ -1,4 +1,5 @@
 <script setup>
+    import { socket } from "@/socket";
 	const emit = defineEmits(['close', 'login-submit']);
 
 	var login = "";
@@ -6,9 +7,11 @@
 	
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
-		emit("login-submit", login, password);
-		emit("close"); // TODO if login is valid, lobby opens
+		socket.emit("login-submit", login, password);
+		socket.emit("close"); // TODO if login is valid, lobby opens
 	}
+
+    
 </script>
 
 <template>
@@ -18,7 +21,7 @@
 		<input type="password" v-model.trim="password" placeholder="Password" />
 
 		<button type="button" @click="$emit('close')"> Cancel </button>
-		<input type="submit" @click="loginSubmit" value="Submit" />
+		<input type="submit" @click="loginSubmit()" value="Submit" />
 	</div>
 </template>
 

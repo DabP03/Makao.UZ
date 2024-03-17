@@ -10,6 +10,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
+
+    socket.on('login-submit', (login, password) => {
+        console.log(`Login=${login}\nPassowrd=${password}`);
+    });
 });
 
 const port = process.env.PORT || 3000;
