@@ -19,7 +19,7 @@ npm install
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev
+npm run dev <- kłamstwa, nie ma console.logów, używać "node server.js"
 ```
 
 ### Compile and Minify for Production
