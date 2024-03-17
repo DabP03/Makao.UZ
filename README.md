@@ -19,11 +19,16 @@ npm install
 ### Compile and Hot-Reload for Development
 
 ```sh
-npm run dev <- kłamstwa, nie ma console.logów, używać "node server.js"
+npm run dev
 ```
 
 ### Compile and Minify for Production
 
 ```sh
 npm run build
+```
+
+### Odpalić server socket
+```sh
+node server.js
 ```
