@@ -8,7 +8,7 @@
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
 		socket.emit("login-submit", login, password);
-		socket.emit("close"); // TODO if login is valid, lobby opens
+		emit("close"); // TODO if login is valid, lobby opens
 	}
 
     
