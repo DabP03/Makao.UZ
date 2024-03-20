@@ -1,4 +1,0 @@
-import { io } from 'socket.io-client';
-
-export const socket = io('http://localhost:3000'); // Change the URL according to your server configuration
-
