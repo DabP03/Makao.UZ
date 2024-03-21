@@ -2,7 +2,11 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const server = http.createServer();
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3001"
+    }
+});
 
 io.on('connection', (socket) => {
     console.log('A user connected ' + socket.id);
