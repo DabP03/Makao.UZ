@@ -1,32 +1,36 @@
 <script setup>
-    import { socket } from "@/socket";
-	const emit = defineEmits(['close', 'login-submit']);
-
+	const emit = defineEmits(['close', 'register-submit']);
+  
 	var login = "";
 	var password = "";
+	var confirm_password = "";
 	
-	function loginSubmit() {
-		console.log('Login submitted', login, password);
-		socket.emit('login-submit', login, password);
-		emit('close'); // TODO if login is valid, lobby opens
+	function registerSubmit() {
+		if(password == confirm_password) {
+			console.log('register-submitted', login, password);
+			emit('register-submit', login, password);
+		} else {
+			console.log("Passwords don't match");
+		}
+		emit('close');
 	}
-
-    
 </script>
 
 <template>
-	<div class="login-form">
+	<div class="register-form">
 		<input type="text" v-model.trim="login" placeholder="Login" />
 
 		<input type="password" v-model.trim="password" placeholder="Password" />
 
+		<input type="password" v-model.trim="confirm_password" placeholder="Confirm password" />
+
 		<button type="button" @click="$emit('close')"> Cancel </button>
-		<input type="submit" @click="loginSubmit()" value="Submit" />
+		<input type="submit" @click="registerSubmit()" value="Submit" />
 	</div>
 </template>
 
 <style scoped>
-	.login-form {
+	.register-form {
 		display: flex;
 		flex-direction: column; /* Puts all buttons in a column */
 		padding: 5px;
@@ -46,3 +50,4 @@
 		}
 	}
 </style>
+
