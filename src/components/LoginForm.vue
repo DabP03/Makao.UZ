@@ -1,5 +1,5 @@
 <script setup>
-    import { socket, passwordHash, validatePassword } from "@/utils"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
+    import { socket } from "@/socket"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
 	const emit = defineEmits(['close', 'login-submit']);
 
 	var login = "";
@@ -7,7 +7,7 @@
 
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
-		socket.emit("login-submit", login, crypt(password));
+		socket.emit("login-submit", login, password);
 		emit("close"); // TODO if login is valid, lobby opens
 	}
 
