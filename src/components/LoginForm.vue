@@ -1,10 +1,10 @@
 <script setup>
-    import { socket } from "@/socket";
+    import { socket } from "@/socket"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
 	const emit = defineEmits(['close', 'login-submit']);
 
 	var login = "";
 	var password = "";
-	
+
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
 		socket.emit('login-submit', login, password);
