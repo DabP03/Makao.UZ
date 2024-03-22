@@ -9,10 +9,10 @@
 		if(password == confirm_password) {
 			console.log("Register submitted", login, password);
 			emit('register-submit', login, password);
+			emit('close');
 		} else {
 			console.log("Passwords don't match");
 		}
-		emit('close');
 	}
 </script>
 

@@ -2,7 +2,9 @@
 	import { ref } from "vue";
 	import LoginForm from "./LoginForm.vue";
 	import RegisterForm from "./RegisterForm.vue";
-	
+
+	const emit = defineEmits(['open-lobby']);
+
 	defineProps({
   	msg: { type: String, required: true }
 	})
@@ -24,7 +26,8 @@
 		</div>
 		<login-form 
 			v-else-if="loginOpen"
-			@close="loginOpen=false">
+			@close="loginOpen=false"
+			@open-lobby="$emit('open-lobby')"> <!-- open-lobby emit to App.vue -->
 		</login-form>
 		<register-form
 			v-else-if="registerOpen"

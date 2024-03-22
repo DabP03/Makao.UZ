@@ -1,5 +1,9 @@
 <script setup>
-import Welcome from './components/Welcome.vue'
+	import { ref } from "vue";
+	import Welcome from "./components/Welcome.vue";
+	import Lobby from "./components/Lobby.vue";
+
+	var lobbyOpen = ref(false);
 </script>
 
 <template>
@@ -7,7 +11,12 @@ import Welcome from './components/Welcome.vue'
     <img alt="Makao logo" class="logo" src="./assets/a_hearts.png" width="125" height="190" />
 
     <div class="wrapper">
-      <Welcome msg="Makao" />
+      <Welcome msg="Makao"
+				v-if="!lobbyOpen"
+				@open-lobby="lobbyOpen=true"/> <!-- open-lobby emit from LoginForm.vue -->
+			<Lobby
+				v-else 
+				@close="lobbyOpen=false"/>
     </div>
   </header>
 

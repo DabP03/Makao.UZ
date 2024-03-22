@@ -1,6 +1,6 @@
 <script setup>
-    import { socket } from "@/socket"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
-	const emit = defineEmits(['close', 'login-submit']);
+	import { socket } from "@/socket"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
+	const emit = defineEmits(['close', 'login-submit', 'open-lobby']);
 
 	var login = "";
 	var password = "";
@@ -8,7 +8,8 @@
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
 		socket.emit('login-submit', login, password);
-		emit('close'); // TODO if login is valid, lobby opens
+		emit('open-lobby'); // emit to App.vue; TODO lobby opens only if login is valid
+		emit('close');
 	}
 
     
