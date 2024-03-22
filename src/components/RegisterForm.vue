@@ -7,7 +7,7 @@
 	
 	function registerSubmit() {
 		if(password == confirm_password) {
-			console.log('register-submitted', login, password);
+			console.log("Register submitted", login, password);
 			emit('register-submit', login, password);
 		} else {
 			console.log("Passwords don't match");
@@ -44,7 +44,7 @@
 		margin: 5px;
 	}
 	@media (min-width: 1024px) {
-  	.login-form {
+  	.register-form {
   	  text-align: left;
 			width: 100%;
 		}

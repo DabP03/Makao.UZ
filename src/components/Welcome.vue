@@ -1,12 +1,14 @@
 <script setup>
 	import { ref } from "vue";
 	import LoginForm from "./LoginForm.vue";
+	import RegisterForm from "./RegisterForm.vue";
 	
 	defineProps({
   	msg: { type: String, required: true }
 	})
 
 	var loginOpen = ref(false);
+	var registerOpen = ref(false);
 	
 </script>
 
@@ -16,14 +18,18 @@
     <h3>
 			Lorem ipsum dolor sit amet.
     </h3>
-		<div class="button-group" v-if="!loginOpen">
+		<div class="button-group" v-if="!loginOpen && !registerOpen" >
 			<button type="button" @click="loginOpen=true"> Login </button>
-			<button type="button"> Register </button>
+			<button type="button" @click="registerOpen=true"> Register </button>
 		</div>
 		<login-form 
-			v-else
+			v-else-if="loginOpen"
 			@close="loginOpen=false">
 		</login-form>
+		<register-form
+			v-else-if="registerOpen"
+			@close="registerOpen=false">
+		</register-form>
   </div>
 </template>
 
