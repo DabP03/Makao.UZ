@@ -1,10 +1,19 @@
 <script setup>
+	import { socket } from "@/socket";
+
+	function updatePlayers(players) {
+		players.forEach(player => console.log(player));
+	}
+
+	socket.on('update-players', (players) => {
+		updatePlayers(players);
+	});
 </script>
 
 <template>
 	<div class="lobby">
 		<h1 class="muted-red">Lobby ipsum</h1>
-		<div class="player-list">
+		<div class="list">
 			No players yet.
 		</div>
 		<button type="button" @click="$emit('close')"> Exit </button>

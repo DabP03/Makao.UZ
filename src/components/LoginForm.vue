@@ -7,7 +7,7 @@
 
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
-		socket.emit('login-submit', login, password);
+		socket.emit('login-submit', login, password); // emit to server/main.js
 		emit('open-lobby'); // emit to App.vue; TODO lobby opens only if login is valid
 		emit('close');
 	}
