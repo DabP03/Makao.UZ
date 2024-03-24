@@ -1,31 +1,36 @@
 <script setup>
-	import { socket } from "@/socket"; // masz Jaca 2 funkcje jedą do hashowania jedną do sprawdzania
-	const emit = defineEmits(['close', 'login-submit', 'open-lobby']);
-
+	const emit = defineEmits(['close', 'register-submit']);
+  
 	var login = "";
 	var password = "";
-
-	function loginSubmit() {
-		console.log('Login submitted', login, password);
-		socket.emit('login-submit', login, password); // emit to server/main.js
-		emit('open-lobby', login); // emit to App.vue; TODO lobby opens only if login is valid
-		emit('close');
+	var confirm_password = "";
+	
+	function registerSubmit() {
+		if(password == confirm_password) {
+			console.log("Register submitted", login, password);
+			emit('register-submit', login, password);
+			emit('close');
+		} else {
+			console.log("Passwords don't match");
+		}
 	}
 </script>
 
 <template>
-	<div class="login-form">
+	<div class="register-form">
 		<input type="text" v-model.trim="login" placeholder="Login" />
 
 		<input type="password" v-model.trim="password" placeholder="Password" />
 
+		<input type="password" v-model.trim="confirm_password" placeholder="Confirm password" />
+
 		<button type="button" @click="$emit('close')"> Cancel </button>
-		<input type="submit" @click="loginSubmit()" value="Submit" />
+		<input type="submit" @click="registerSubmit()" value="Submit" />
 	</div>
 </template>
 
 <style scoped>
-	.login-form {
+	.register-form {
 		display: flex;
 		flex-direction: column; /* Puts all buttons in a column */
 		padding: 5px;
@@ -39,9 +44,10 @@
 		margin: 5px;
 	}
 	@media (min-width: 1024px) {
-  	.login-form {
+  	.register-form {
   	  text-align: left;
 			width: 100%;
 		}
 	}
 </style>
+
