@@ -2,8 +2,14 @@
 	import { ref } from "vue";
 	import Welcome from "./components/Welcome.vue";
 	import Lobby from "./components/Lobby.vue";
-
+	
 	var lobbyOpen = ref(false);
+	var username = "";
+
+	function openLobby(login) {
+		lobbyOpen.value = true;
+		username = login;
+	}
 </script>
 
 <template>
@@ -11,10 +17,10 @@
     <img alt="Makao logo" class="logo" src="./assets/a_hearts.png" width="125" height="190" />
 
     <div class="wrapper">
-      <Welcome msg="Makao"
+      <Welcome msg="Makao" username
 				v-if="!lobbyOpen"
-				@open-lobby="lobbyOpen=true"/> <!-- open-lobby emit from LoginForm.vue -->
-			<Lobby
+				@open-lobby="openLobby"/> <!-- open-lobby emit from Welcome.vue <- LoginForm.vue -->
+			<Lobby :username=username
 				v-else 
 				@close="lobbyOpen=false"/>
     </div>

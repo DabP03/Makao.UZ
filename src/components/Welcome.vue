@@ -4,30 +4,32 @@
 	import RegisterForm from "./RegisterForm.vue";
 
 	const emit = defineEmits(['open-lobby']);
-
-	defineProps({
-  	msg: { type: String, required: true }
+	const props = defineProps({
+  	msg: { type: String, required: true },
 	})
 
 	var loginOpen = ref(false);
 	var registerOpen = ref(false);
-	
+
+	function openLobby(login) {
+		emit('open-lobby', login); // open-lobby emit to App.vue
+	}
 </script>
 
 <template>
   <div class="greetings">
     <h1 class="muted-red">{{ msg }}</h1>
     <h3>
-			Lorem ipsum dolor sit amet.
+			Login to join the game	
     </h3>
 		<div class="button-group" v-if="!loginOpen && !registerOpen" >
 			<button type="button" @click="loginOpen=true"> Login </button>
 			<button type="button" @click="registerOpen=true"> Register </button>
 		</div>
-		<login-form 
+		<login-form
 			v-else-if="loginOpen"
 			@close="loginOpen=false"
-			@open-lobby="$emit('open-lobby')"> <!-- open-lobby emit to App.vue -->
+			@open-lobby="openLobby">
 		</login-form>
 		<register-form
 			v-else-if="registerOpen"
