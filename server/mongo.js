@@ -46,7 +46,7 @@ exports.Mongo = class Mongo {
         this.run().catch(console.dir);
         try {
             const result = await this.db.collection("players").findOne({login: `${login}`});
-            if (result != null) {
+            if (!result) {
                 this.db.collection("players").insertOne({login: `${login}`, password: `${password}`});
                 return true;
             } else {

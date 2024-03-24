@@ -1,4 +1,5 @@
 <script setup>
+	import { socket } from "@/socket";
 	const emit = defineEmits(['close', 'register-submit']);
   
 	var login = "";
@@ -8,7 +9,7 @@
 	function registerSubmit() {
 		if(password == confirm_password) {
 			console.log("Register submitted", login, password);
-			emit('register-submit', login, password);
+			socket.emit('register-submit', login, password);
 			emit('close');
 		} else {
 			console.log("Passwords don't match");

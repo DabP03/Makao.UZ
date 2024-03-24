@@ -26,6 +26,7 @@ exports.main = (io) => {
             console.log(`Submited register: ${login} | ${password}`);
             const result = await mongo.signInPlayer(login, password);
             socket.emit('answer-register-submit', result);
+            console.log(result);
             if (result) {
                 console.log(`Registered: ${login} | ${password}`);
             }
