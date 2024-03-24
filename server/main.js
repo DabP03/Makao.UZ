@@ -10,7 +10,12 @@ exports.main = (io) => {
         socket.on('login-submit', (login, password) => {
             console.log(`Login=${login}\nPassowrd=${password}`);
 	    players.push(login);
-	    socket.emit('update-players', players);
+	    io.sockets.emit('update-players', players); // emit to all sockets
         });
+
+	socket.on('player-left', (login) => {
+	    // TODO delete login from players
+	    io.sockets.emit('update-players', players); // emit to all sockets
+	});
     });
 }
