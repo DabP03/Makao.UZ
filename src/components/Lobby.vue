@@ -17,7 +17,7 @@
 	});
 
 	function exitLobby() {
-		socket.emit('player-left', props.username); // player-left emit to server/main.js
+		socket.emit('lobby-exit'); // player-left emit to server/main.js
 		emit('close');
 	}
 </script>

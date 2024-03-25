@@ -8,8 +8,14 @@
 	function loginSubmit() {
 		console.log('Login submitted', login, password);
 		socket.emit('login-submit', login, password); // emit to server/main.js
-		emit('open-lobby', login); // emit to App.vue; TODO lobby opens only if login is valid
-		emit('close');
+		socket.on('login-submit-answer', (result) => {
+			if (result) {
+				emit('open-lobby', login); // emit to App.vue; TODO lobby opens only if login is valid
+				emit('close');
+			} else {
+				console.log('Can not login')
+			}
+		});
 	}
 </script>
 
