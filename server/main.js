@@ -1,5 +1,6 @@
 const {Mongo} = require('./mongo');
-const mongo = new Mongo();
+const settings = require('../serverConfig.json');
+const mongo = new Mongo(settings.mongoUri);
 
 exports.main = (io) => {
 

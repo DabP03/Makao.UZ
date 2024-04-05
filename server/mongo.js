@@ -1,8 +1,8 @@
 const {MongoClient} = require('mongodb');
 
 exports.Mongo = class Mongo {
-    constructor() {
-        this.uri = 'mongodb://localhost:27017';
+    constructor(uri) {
+        this.uri = uri;
         this.client = new MongoClient(this.uri);
         this.db = this.client.db('makao');
     }
@@ -56,5 +56,40 @@ exports.Mongo = class Mongo {
             console.error(error);
         }
     }
+
+    async getPlayerInfo(login) { // zwraca obiekt user
+        this.run().catch(console.dir);
+        try {
+            return await this.db.collection("users").findOne({login: `${login}`});
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async setPlayerInfo(user) { // zwraca false jak nie znajdzie usera, jakby ktoś cos pomieszał z loginem
+        this.run().catch(console.dir);
+        try {
+            const result = await this.db.collection("users").findOne({login: `${login}`});
+            if (result != null) {
+                this.db.collection("users").insertOne(user);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async incrementUserWins(user) { // pisze do bazy danych, jak trzeba bez wysyłąnia do bazy to na userze
+        user.incrementUserWins();
+        await this.setPlayerInfo(user);
+    }
+
+    async incrementUserLoses(user) {
+        user.incrementUserLoses();
+        await this.setPlayerInfo(user);
+    }
+
 
 }
