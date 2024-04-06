@@ -1,14 +1,16 @@
 <script setup>
 	import { socket } from "@/socket";
 	import { ref } from "vue";
+	import Game from "./Game.vue";
 
-	const emit = defineEmits(['close']);
+	const emit = defineEmits(['close', 'game-start', 'logo-hide', 'logo-show']);
 	const props = defineProps({
 		username: { type: String }
 	});
 
 	var playerList = ref([]);
 	var val = ref(0); // thanks to this value, the player list appears; TODO maybe a cleaner solution
+	var gameOpen = ref(false);
 
 	socket.on('update-players', (players) => { // update-players emit from server/main.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
@@ -20,17 +22,32 @@
 		socket.emit('lobby-exit'); // player-left emit to server/main.js
 		emit('close');
 	}
+
+	function startGame() {
+		emit('game-start');
+		gameOpen.value = true;
+		emit('logo-hide');
+	}
+
+	function exitGame() {
+		gameOpen.value = false;
+		emit('logo-show');
+	}
 </script>
 
 <template>
-	<div class="lobby">
+	<div class="lobby" v-if="!gameOpen">
 		<h1 class="muted-red"> Lobby ipsum </h1>
 		<h2 class="muted-red"> Joined as: {{ username }} </h2>
 		<div class="list">
 			<li v-for="player in playerList"> {{ player }} </li>	
 		</div>
+		<button type="button" @click="startGame()"> Start game </button>
 		<button type="button" @click="exitLobby()"> Exit </button>
 	</div>
+	<Game
+		v-else-if="gameOpen"
+		@close="exitGame()"/>
 </template>
 
 <style scoped>

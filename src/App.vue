@@ -5,6 +5,7 @@
 	
 	var lobbyOpen = ref(false);
 	var username = "";
+	var logoVisible = ref(true);
 
 	function openLobby(login) {
 		lobbyOpen.value = true;
@@ -14,15 +15,17 @@
 
 <template>
   <header>
-    <img alt="Makao logo" class="logo" src="./assets/a_hearts.png" width="125" height="190" />
+		<img v-if="logoVisible" alt="Makao logo" class="logo" src="./assets/a_hearts.png" width="125" height="190" />
 
     <div class="wrapper">
       <Welcome msg="Makao" username
 				v-if="!lobbyOpen"
 				@open-lobby="openLobby"/> <!-- open-lobby emit from Welcome.vue <- LoginForm.vue -->
 			<Lobby :username=username
-				v-else 
-				@close="lobbyOpen=false"/>
+				v-else-if="lobbyOpen" 
+				@close="lobbyOpen=false"
+				@logo-hide="logoVisible=false"
+				@logo-show="logoVisible=true"/>
     </div>
   </header>
 
