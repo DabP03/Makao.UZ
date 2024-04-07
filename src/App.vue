@@ -14,7 +14,7 @@
 </script>
 
 <template>
-  <header>
+  <main>
 		<img v-if="logoVisible" alt="Makao logo" class="logo" src="./assets/a_hearts.png" width="125" height="190" />
 
     <div class="wrapper">
@@ -27,14 +27,11 @@
 				@logo-hide="logoVisible=false"
 				@logo-show="logoVisible=true"/>
     </div>
-  </header>
-
-  <main>
   </main>
 </template>
 
 <style scoped>
-header {
+main {
   line-height: 1.5;
 }
 
@@ -44,19 +41,18 @@ header {
 }
 
 @media (min-width: 1024px) {
-  header {
+	main {
     display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
   }
 
   .logo {
     margin: 0 2rem 0 0;
   }
 
-  header .wrapper {
+  main .wrapper {
     display: flex;
-    place-items: flex-start;
+    place-items: center;
     flex-wrap: wrap;
   }
 }

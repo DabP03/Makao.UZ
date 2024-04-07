@@ -45,9 +45,10 @@
 		<button type="button" @click="startGame()"> Start game </button>
 		<button type="button" @click="exitLobby()"> Exit </button>
 	</div>
-	<Game
-		v-else-if="gameOpen"
-		@close="exitGame()"/>
+	<div class="game" v-if="gameOpen">
+		<Game
+			@close="exitGame()"/>
+	</div>
 </template>
 
 <style scoped>
@@ -57,6 +58,15 @@
 		padding: 5px;
 		width: 50%;
 		margin: auto; /* Centers button-group inside greeting */
+	}
+
+	.game { /* game div is fullscreen */
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: white;
+		width: 100%;
+		height: 100%;
 	}
 	
 	input,
