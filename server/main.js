@@ -1,6 +1,7 @@
 const {Mongo} = require('./mongo');
 const settings = require('../serverConfig.json');
 const mongo = new Mongo(settings.mongoUri);
+const {User} = require('./user');
 
 exports.main = (io) => {
 
@@ -17,6 +18,16 @@ exports.main = (io) => {
             if (result) {
                 console.log(`Logged: ${login} | ${password}`);
             }
+            // test
+            // var user = new User(socket, "test");
+            // user.games = {
+            //     makao: {
+            //         wins: 1,
+            //         loses: 2,
+            //     },
+            // };
+            // await mongo.setPlayerInfo(user);
+
         });
 
         socket.on('register-submit', async (login, password) => {

@@ -1,15 +1,41 @@
-exports.User = class User {
-    constructor(login) {
-        this.login = login;
-        this.wins = 0;
-        this.loses = 0;
+const {Games} = require("./games");
+
+class User {
+    constructor(socket, user) {
+            this.socket = socket;
+            this.currentGame = null;
+
+        if (user instanceof UserData) {
+            this.login = user.login;
+            this.games = user.games;
+        } else {
+            this.login = user;
+            this.games = new Games();
+        }
     }
 
     incrementWins() {
-        this.wins++;
+        this.currentGame.wins++;
     }
 
     incrementLoses() {
-        this.loses++;
+        this.currentGame.loses++
     }
+}
+
+class UserData {
+    constructor(user) {
+        if (user instanceof User) {
+        this.login = user.login;
+        this.games = user.games;
+        } else if (user instanceof String) {
+            this.login = user;
+            this.games = Games();
+        }
+    }
+}
+
+module.exports = {
+    User: User,
+    UserData: UserData,
 }
