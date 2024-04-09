@@ -28,7 +28,7 @@ class UserData {
         if (user instanceof User) {
         this.login = user.login;
         this.games = user.games;
-        } else if (user instanceof String) {
+        } else {
             this.login = user;
             this.games = Games();
         }

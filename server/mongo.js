@@ -78,7 +78,7 @@ exports.Mongo = class Mongo {
             if (result != null) {
                 await this.db.collection("userData").updateOne(
                     { login: `${userData.login}` },
-                    { $set: JSON.parse(JSON.stringify(userData)) }
+                    { $set: userData }
                 );
                 console.log(JSON.stringify(userData.games));
                 return true;
