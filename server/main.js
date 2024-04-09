@@ -19,14 +19,14 @@ exports.main = (io) => {
                 console.log(`Logged: ${login} | ${password}`);
             }
             // test
-            var user = new User(socket, "test");
-            user.games = {
-                makao: {
-                    wins: 1,
-                    loses: 2,
-                },
-            };
-            await mongo.setPlayerInfo(user);
+            // var user = new User(socket, "test");
+            // user.games = {
+            //     makao: {
+            //         wins: 1,
+            //         loses: 2,
+            //     },
+            // };
+            // await mongo.setPlayerInfo(user);
 
         });
 
