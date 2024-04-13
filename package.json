@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "server": "node serverStart.js",
     "dev": "vite -d --port 3001 --host",
     "build": "vite build",
     "preview": "vite preview"
