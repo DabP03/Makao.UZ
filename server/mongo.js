@@ -78,8 +78,6 @@ exports.Mongo = class Mongo {
 
     async setPlayerInfo(user) { // zwraca false jak nie znajdzie usera, jakby ktoś cos pomieszał z loginem
         const userData = new UserData(user);
-        console.log(user);
-        console.log(JSON.stringify(userData));
         try {
             await this.client.connect();
             const result = await this.db.collection("userData").findOne({login: `${userData.login}`});
@@ -88,7 +86,7 @@ exports.Mongo = class Mongo {
                     { login: `${userData.login}` },
                     { $set: userData }
                 );
-                console.log(JSON.stringify(userData.games));
+                console.log(`${user.login} has been updated`);
                 return true;
             } else {
                 return false;
