@@ -13,6 +13,19 @@ class User {
             this.games = new Games();
         }
     }
+    
+    updateGames() {
+        if (this.games == undefined) {
+            this.games = new Games();
+        } else {
+            if (this.games.makao == undefined) {
+                this.games = {
+                    wins: 0,
+                    loses: 0,
+                };
+            }
+        }
+    }
 
     incrementWins() {
         this.currentGame.wins++;

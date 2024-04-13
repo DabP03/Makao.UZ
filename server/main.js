@@ -14,20 +14,10 @@ exports.main = (io) => {
 
         socket.on('login-submit', async (login, password) => {
             const result = await mongo.logInPlayer(login, password);
-            socket.emit('answer-login-submit', result);
-            if (result) {
+            socket.emit('answer-login-submit', new User(socket, result));
+            if (result != null) {
                 console.log(`Logged: ${login} | ${password}`);
             }
-            // test
-            // var user = new User(socket, "test");
-            // user.games = {
-            //     makao: {
-            //         wins: 1,
-            //         loses: 2,
-            //     },
-            // };
-            // await mongo.setPlayerInfo(user);
-
         });
 
         socket.on('register-submit', async (login, password) => {
