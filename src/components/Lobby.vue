@@ -12,14 +12,14 @@
 	var val = ref(0); // thanks to this value, the player list appears; TODO maybe a cleaner solution
 	var gameOpen = ref(false);
 
-	socket.on('update-players', (players) => { // update-players emit from server/main.js
+	socket.on('update-players', (players) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
 		players.forEach(player => playerList.value.push(player)); // rewrite array
 		val.value++; // for some reason needed to render the list	
 	});
 
 	function exitLobby() {
-		socket.emit('lobby-exit'); // player-left emit to server/main.js
+		socket.emit('lobby-exit'); // player-left emit to server/lobby.js
 		emit('close');
 	}
 
@@ -47,6 +47,8 @@
 	</div>
 	<div class="game" v-if="gameOpen">
 		<Game
+			:username=username
+      :playerList=playerList
 			@close="exitGame()"/>
 	</div>
 </template>

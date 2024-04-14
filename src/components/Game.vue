@@ -1,13 +1,36 @@
 <script setup>
+	import { ref } from "vue";
 	const emit = defineEmits(['close']);
+	const props = defineProps({
+		username: { type: String },
+		playerList: { type: Array, default: ["one", "two", "three"] }
+	});
+
+  var cardHand = ref([1, 2, 3]);
+  var cardOnPile = ref(0);
+
+  function playCard() {
+    console.log("Card played");
+    // remove from hand
+  }
 </script>
 
 <template>
 	<div class="game">
-		<div class="player-list"> Player list </div>
+		<div class="muted-red"> Playing as: {{ username }} </div>
+		<div class="player-list"> 
+			<div class="player-info" v-for="player in playerList"> 
+        {{ player }}
+        <br> 
+        no. of cards 
+      </div>
+		</div>
 		<div class="table">
-			<div class="card-pile"> Card pile </div> <!-- where players put their cards -->
+      <div class="card-pile"> {{ cardOnPile.value }} </div> <!-- where players play their cards -->
 			<div class="card-deck"> Card deck </div> <!-- where players draw cards from -->
+		</div>
+		<div class="card-hand">
+      <div class="card" v-for="card in cardHand" @click="playCard()"> {{ card }} </div>	
 		</div>
 		<div class="hud">
 			<button type="button"> End turn </button>
@@ -17,7 +40,7 @@
 	</div>
 </template>
 
-<style scoped>
+<style scoped> /* TODO rethink divs height when they're filled with content */
 	.game {
   	text-align: center; /* always centered, no matter the screen size */
 		display: flex;
@@ -27,6 +50,14 @@
 	.player-list {
 		background-color: blue;
 		height: 20%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.player-info {
+		padding-left: 8px;
+		padding-right: 8px;
 	}
 
 	.table {
@@ -37,9 +68,37 @@
 		height: 100%;
 	}
 
+	.card-pile {
+		min-width: 63px; /* 88x63 mm - size of Piatnik poker cards */
+		min-height: 88px;
+		background-color: #222222;
+		margin: 8px;
+	}
+
+	.card-deck {
+		min-width: 63px;
+		min-height: 88px;
+		background-color: #222222;
+		margin: 8px;
+	}
+
+	.card-hand {
+		background-color: #222222;
+		height: 40%;
+		display: flex;
+    justify-content: center;
+	}
+
+  .card {
+    background-color: white;
+    min-width: 63px;
+		min-height: 88px;
+    margin: 8px;
+  }
+
 	.hud {
 		background-color: blue;
-		height: 20%;
+		height: 15%;
 		display: flex;
 		justify-content: center; /* Centers content width-wise */
 		align-items: center; /* Centers content height-wise preserving the default height */
