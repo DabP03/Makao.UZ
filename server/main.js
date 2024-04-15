@@ -7,6 +7,7 @@ const lobby = require('./lobby');
 
 
 exports.main = (io) => {
+    lobby.setIo(io);
 
     io.on('connection', (socket) => {
         console.log('A user connected ' + socket.id);
