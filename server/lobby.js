@@ -1,16 +1,21 @@
 let users = [];
+let io;
 
-exports.addUser = (socket, login) => {
-    users.push(login);
+exports.setIo = (newio) => {
+    io = newio;
+    console.log(io);
+}
+
+exports.addUser = (socket, user) => {
+    users.push(user);
     socket.join('lobby');
-    socket.emit('update-players', users); // emit to all sockets
-    socket.to('lobby').emit('update-players', users)
+    io.to('lobby').emit('update-players', users);
     console.log(`Users in lobby: ${users}`);
 
     function removeUser() {
         socket.leave('lobby');
-        users.splice(users.indexOf(login), 1); // remove player from list
-        socket.to('lobby').emit('update-players', users) // emit to all sockets
+        users.splice(users.indexOf(user), 1); // remove player from list
+        io.to('lobby').emit('update-players', users) // emit to all sockets
         socket.off('lobby-exit', removeUser);
         console.log(`Users in lobby: ${users}`);
     }
