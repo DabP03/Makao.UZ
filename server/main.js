@@ -28,9 +28,25 @@ exports.main = (io) => {
                 .catch(err => console.error(err.message));
             // const hashedPassword = password;
             var result;
-            if (login == "debug" && password == "debug") {
-                socket.emit('answer-login-submit', new User(socket, "debug"));
+            if (login == "debug1" && password == "debug1") {
+                socket.emit('answer-login-submit', new User(socket, "debug1"));
                 result = true;
+            } else if (login == "debug2" && password == "debug2") {
+                socket.emit('answer-login-submit', new User(socket, "debug2"));
+                result = true;
+
+            }  else if (login == "debug3" && password == "debug3") {
+                socket.emit('answer-login-submit', new User(socket, "debug3"));
+                result = true;
+
+            } else if (login == "debug4" && password == "debug4") {
+                socket.emit('answer-login-submit', new User(socket, "debug4"));
+                result = true;
+
+            } else if (login == "asdf" && password == "asdf") {
+                socket.emit('answer-login-submit', new User(socket, "asdf"));
+                result = true;
+
             } else {
                 result = await mongo.logInPlayer(login, hashedPassword);
                 if (result != false) {
