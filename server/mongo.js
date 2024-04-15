@@ -1,60 +1,96 @@
 const {MongoClient} = require('mongodb');
+const {UserData} = require('./user');
+const settings = require('../serverConfig.json');
 
 exports.Mongo = class Mongo {
-    constructor() {
-        this.uri = 'mongodb://localhost:27017';
+    constructor(uri) {
+        this.uri = uri;
         this.client = new MongoClient(this.uri);
         this.db = this.client.db('makao');
+        if (settings.createCollections) { // tworzy kolekcje jeżeli createCollections w serverConfig jest true
+            this.createCollections();
+        }
+        
     }
 
-    async run() {
+    async createCollections() { 
         try {
             await this.client.connect();
-
-            // Establish and verify connection
-            await this.client.db("admin").command({ ping: 1 });
+            await this.db.createCollection("users");
+            await this.db.createCollection("userData");
+        } catch (error) {
+            console.error(error);
         } finally {
-            // Ensures that the client will close when you finish/error
             await this.client.close();
         }
-
     }
 
-    async logInPlayer(login, password) { // zwraca true jak logowanie się powiodło, false jak nie
-        if (login == "debug" && password == "debug") {
-            return true;
-        }
-        this.run().catch(console.dir);
-
+    async logInPlayer(login, password) { // zwraca userData jak logowanie się powiodło, false jak nie
         try {
-            const result = await this.db.collection("players").findOne({login: `${login}`, password: `${password}`});
+            await this.client.connect();
+            const result = await this.db.collection("users").findOne({
+                login: `${login}`,
+                password: `${password}`
+            });
             console.log(result);
             if (result != null) {
-                return true;
+                return await this.db.collection("userData").findOne({
+                    login: `${result.login}`
+                });
             } else {
                 return false;
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            await this.client.close();
         }
     }
 
-    async signInPlayer(login, password) { // tak samo jak wyżej
-        if (login == "debug" && password == "debug") {
-            return true;
-        }
-        this.run().catch(console.dir);
+    async signInPlayer(login, password) { // tak samo jak wyżej tylko że true i false
         try {
-            const result = await this.db.collection("players").findOne({login: `${login}`});
-            if (!result) {
-                this.db.collection("players").insertOne({login: `${login}`, password: `${password}`});
+            await this.client.connect();
+            const result = await this.db.collection("users").findOne({
+                login: `${login}`
+            });
+            if (result != null) {
+                await this.db.collection("users").insertOne({
+                    login: `${login}`,
+                    password: `${password}`
+                });
+                await this.db.collection("userData").insertOne(new UserData(login));
                 return true;
             } else {
                 return false;
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            await this.client.close();
         }
     }
 
+    async setPlayerInfo(user) { // zwraca false jak nie znajdzie usera, jakby ktoś cos pomieszał z loginem
+        const userData = new UserData(user);
+        try {
+            await this.client.connect();
+            const result = await this.db.collection("userData").findOne({
+                login: `${userData.login}`
+            });
+            if (result != null) {
+                await this.db.collection("userData").updateOne(
+                    { login: `${userData.login}` },
+                    { $set: userData }
+                );
+                console.log(`${user.login} has been updated`);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            await this.client.close();
+        }
+    }
 }
