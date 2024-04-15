@@ -19,41 +19,43 @@ exports.main = (io) => {
             const hashedPassword = bcrypt // hashowenie hasla
                 .genSalt(saltRounds)
                 .then(salt => {
-                    // console.log('Salt: ', salt)
                     return bcrypt.hash(password, salt)
                 })
-                // .then(hash => {
-                //     console.log('Hash: ', hash)
-                // })
                 .catch(err => console.error(err.message));
             // const hashedPassword = password;
-            var result;
             if (login == "debug1" && password == "debug1") {
-                socket.emit('answer-login-submit', new User(socket, "debug1"));
-                result = true;
+                socket.emit('login-submit-answer', true);
+                console.log("Logged debug account");
+                // lobby.addUser(socket, new User(socket.id, "debug1"))
+
             } else if (login == "debug2" && password == "debug2") {
-                socket.emit('answer-login-submit', new User(socket, "debug2"));
-                result = true;
+                socket.emit('login-submit-answer', true);
+                console.log("Logged debug account");
+                // lobby.addUser(socket, new User(socket.id, "debug2"))
 
             }  else if (login == "debug3" && password == "debug3") {
-                socket.emit('answer-login-submit', new User(socket, "debug3"));
-                result = true;
+                socket.emit('login-submit-answer', true);
+                console.log("Logged debug account");
+                // lobby.addUser(socket, new User(socket.id, "debug3"))
 
             } else if (login == "debug4" && password == "debug4") {
-                socket.emit('answer-login-submit', new User(socket, "debug4"));
-                result = true;
+                socket.emit('login-submit-answer', true);
+                console.log("Logged debug account");
+                // lobby.addUser(socket, new User(socket.id, "debug4"))
 
             } else if (login == "asdf" && password == "asdf") {
-                socket.emit('answer-login-submit', new User(socket, "asdf"));
-                result = true;
+                socket.emit('login-submit-answer', true);
+                console.log("Logged debug account");
+                // lobby.addUser(socket, new User(socket.id, "asdf"))
 
             } else {
-                result = await mongo.logInPlayer(login, hashedPassword);
+                const result = await mongo.logInPlayer(login, hashedPassword);
                 if (result != false) {
-                    socket.emit('answer-login-submit', new User(socket.id, result));
+                    socket.emit('login-submit-answer', true);
                     console.log(`Logged: ${login} | ${hashedPassword}`);
+                    // lobby.addUser(socket, new User(socket, result))
                 } else {
-                    socket.emit('answer-login-submit', false);
+                    socket.emit('login-submit-answer', false);
                 }
             }
 
@@ -64,23 +66,18 @@ exports.main = (io) => {
             const hashedPassword = bcrypt
                 .genSalt(saltRounds)
                 .then(salt => {
-                    console.log('Salt: ', salt)
                     return bcrypt.hash(password, salt)
                 })
-                .then(hash => {
-                    console.log('Hash: ', hash)
-                })
                 .catch(err => console.error(err.message));
-            var result;
             if (login == "debug" && password == "debug") {
-                socket.emit('answer-register-submit', result);
-                result = true;
+                const result = true;
+                socket.emit('register-submit-answer', result);
             } else {
-                result = await mongo.signInPlayer(login, hashedPassword);
-                socket.emit('answer-register-submit', result);
-            }
-            if (result) {
-                console.log(`Registered: ${login} | ${password}`);
+                const result = await mongo.signInPlayer(login, hashedPassword);
+                socket.emit('register-submit-answer', result);
+                if (result) {
+                    console.log(`Registered: ${login} | ${password}`);
+                }
             }
         });
     });
