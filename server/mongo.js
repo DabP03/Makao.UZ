@@ -25,10 +25,7 @@ exports.Mongo = class Mongo {
         }
     }
 
-    async logInPlayer(login, password) { // zwraca userData jak logowanie się powiodło, null jak nie
-        if (login == "debug" && password == "debug") {
-            return new UserData("debug");
-        }
+    async logInPlayer(login, password) { // zwraca userData jak logowanie się powiodło, false jak nie
         try {
             await this.client.connect();
             const result = await this.db.collection("users").findOne({
@@ -41,7 +38,7 @@ exports.Mongo = class Mongo {
                     login: `${result.login}`
                 });
             } else {
-                return null;
+                return false;
             }
         } catch (error) {
             console.error(error);
@@ -51,9 +48,6 @@ exports.Mongo = class Mongo {
     }
 
     async signInPlayer(login, password) { // tak samo jak wyżej tylko że true i false
-        if (login == "debug" && password == "debug") {
-            return true;
-        }
         try {
             await this.client.connect();
             const result = await this.db.collection("users").findOne({
@@ -80,7 +74,9 @@ exports.Mongo = class Mongo {
         const userData = new UserData(user);
         try {
             await this.client.connect();
-            const result = await this.db.collection("userData").findOne({login: `${userData.login}`});
+            const result = await this.db.collection("userData").findOne({
+                login: `${userData.login}`
+            });
             if (result != null) {
                 await this.db.collection("userData").updateOne(
                     { login: `${userData.login}` },

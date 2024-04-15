@@ -1,29 +1,16 @@
 const {Games} = require("./games");
 
 class User {
-    constructor(socket, user) {
-            this.socket = socket;
-            this.currentGame = null;
+    constructor(socketID, user) {
+        this.socket = socketID;
+        this.currentGame = null;
 
-        if (user instanceof UserData) {
+        if (user.games != undefined) {
             this.login = user.login;
             this.games = user.games;
         } else {
             this.login = user;
             this.games = new Games();
-        }
-    }
-    
-    updateGames() {
-        if (this.games == undefined) {
-            this.games = new Games();
-        } else {
-            if (this.games.makao == undefined) {
-                this.games = {
-                    wins: 0,
-                    loses: 0,
-                };
-            }
         }
     }
 
@@ -38,12 +25,12 @@ class User {
 
 class UserData {
     constructor(user) {
-        if (user instanceof User) {
-        this.login = user.login;
-        this.games = user.games;
+        if (user.games != undefined) {
+            this.login = user.login;
+            this.games = user.games;
         } else {
             this.login = user;
-            this.games = Games();
+            this.games = new Games();
         }
     }
 }
