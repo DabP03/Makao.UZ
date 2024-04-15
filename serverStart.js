@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const server = http.createServer();
 const io = new Server(server, {
     cors: {
-        origin: "http://locahost:3001"
+        origin: "*",
     }
 });
 const port = process.env.PORT || 3000;
