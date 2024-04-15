@@ -4,10 +4,10 @@ const { Server } = require('socket.io');
 const server = http.createServer();
 const io = new Server(server, {
     cors: {
-        origin: settings.cors
+        origin: "http://locahost:3001"
     }
 });
-const port = process.env.PORT || settings.port;
+const port = process.env.PORT || 3000;
 
 
 require('./server/main').main(io);
