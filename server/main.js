@@ -28,34 +28,34 @@ exports.main = (io) => {
             if (login == "debug1" && password == "debug1") {
                 socket.emit('login-submit-answer', true);
                 console.log("Logged debug account");
-                // lobby.addUser(socket, new User(socket.id, "debug1"))
+                lobby.addUser(socket, {login: "debug1", socketID: socket.id, games: {makao: {wins: 0, loses: 0}}});
 
             } else if (login == "debug2" && password == "debug2") {
                 socket.emit('login-submit-answer', true);
                 console.log("Logged debug account");
-                // lobby.addUser(socket, new User(socket.id, "debug2"))
+                lobby.addUser(socket, {login: "debug2", socketID: socket.id, games: {makao: {wins: 0, loses: 0}}})
 
             }  else if (login == "debug3" && password == "debug3") {
                 socket.emit('login-submit-answer', true);
                 console.log("Logged debug account");
-                // lobby.addUser(socket, new User(socket.id, "debug3"))
+                lobby.addUser(socket, {login: "debug3", socketID: socket.id, games: {makao: {wins: 0, loses: 0}}})
 
             } else if (login == "debug4" && password == "debug4") {
                 socket.emit('login-submit-answer', true);
                 console.log("Logged debug account");
-                // lobby.addUser(socket, new User(socket.id, "debug4"))
+                lobby.addUser(socket, {login: "debug4", socketID: socket.id, games: {makao: {wins: 0, loses: 0}}})
 
             } else if (login == "asdf" && password == "asdf") {
                 socket.emit('login-submit-answer', true);
                 console.log("Logged debug account");
-                // lobby.addUser(socket, new User(socket.id, "asdf"))
+                lobby.addUser(socket, {login: "asdf", socketID: socket.id, games: {makao: {wins: 0, loses: 0}}})
 
             } else {
                 const result = await mongo.logInPlayer(login, hashedPassword);
                 if (result != false) {
                     socket.emit('login-submit-answer', true);
                     console.log(`Logged: ${login} | ${hashedPassword}`);
-                    // lobby.addUser(socket, new User(socket, result))
+                    lobby.addUser(socket, new User(socket, result))
                 } else {
                     socket.emit('login-submit-answer', false);
                 }
