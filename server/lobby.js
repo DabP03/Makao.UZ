@@ -3,7 +3,6 @@ let io;
 
 exports.setIo = (newio) => {
     io = newio;
-    console.log(io);
 }
 
 exports.addUser = (socket, user) => {
