@@ -14,7 +14,7 @@
 
 	socket.on('update-players', (players) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
-		players.forEach(player => playerList.value.push(player)); // rewrite array
+		players.forEach(player => playerList.value.push(player.login)); // rewrite array
 		val.value++; // for some reason needed to render the list	
 	});
 
