@@ -1,6 +1,6 @@
 const {MongoClient} = require('mongodb');
 const {UserData} = require('./user');
-const settings = require('../serverConfig.json');
+const settings = require('../../serverConfig.json');
 
 exports.Mongo = class Mongo {
     constructor(uri) {

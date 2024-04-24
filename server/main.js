@@ -1,7 +1,7 @@
-const {Mongo} = require('./mongo');
+const {Mongo} = require('./db/mongo');
 const settings = require('../serverConfig.json');
 const mongo = new Mongo(settings.mongoUri);
-const {User} = require('./user');
+const {User} = require('./db/user');
 const bcrypt = require("bcrypt");
 const lobby = require('./lobby');
 
