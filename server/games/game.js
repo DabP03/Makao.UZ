@@ -26,7 +26,7 @@ const getId = (()=>{
 })();
 
 function shuffle(table) {
-    shuffled = [];
+    let shuffled = [];
     while(table.length > 0) {
         r = Math.floor(Math.random() * table.length);
         shuffled.push(table[r]);
