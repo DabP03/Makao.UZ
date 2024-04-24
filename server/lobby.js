@@ -1,5 +1,7 @@
 let users = [];
+let games = [];
 let io;
+let {Makao} = require('./games/games');
 
 exports.setIo = (newio) => {
     io = newio;
@@ -20,4 +22,17 @@ exports.addUser = (socket, user) => {
     }
     socket.on('lobby-exit', removeUser);
     socket.on('disconnect', removeUser);
+
+
+    // function createGame(name) {
+    //     games.push(new Makao())
+    // }
+
+    // function joinGame(index) {
+        
+    // }
+
+    // function leaveGame() {
+
+    // }
 }
