@@ -52,16 +52,21 @@
 	<div class="lobby" v-if="!gameOpen && !roomOpen">
 		<h1 class="muted-red"> Lobby ipsum </h1>
 		<h2 class="muted-red"> Logged in as: {{ username }} </h2>
+
 		<div class="list">
+      <p class="muted-red"> Players in lobby: </p>
 			<li v-for="player in playerList"> {{ player }} </li>	
 		</div>
+
     <div class="list">
+      <p class="muted-red"> Open game rooms: </p>
       <li v-for="room in roomList"> <!-- TODO unique ids for rooms -->
         <button type="button" @click="enterRoom()"> {{ room }} </button>
       </li>
     </div>
+
 		<button type="button" @click="startGame()"> Start game </button>
-		<button type="button" @click="exitLobby()"> Exit </button>
+		<button type="button" @click="exitLobby()"> Log out </button>
 	</div>
 	<div class="game" v-if="gameOpen">
 		<Game
