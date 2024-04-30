@@ -37,7 +37,7 @@
   }
 
 	function startGame() {
-		emit('game-start');
+		socket.emit('game-start');
 		gameOpen.value = true;
 		emit('logo-hide');
 	}
