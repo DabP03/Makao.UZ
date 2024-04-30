@@ -35,7 +35,7 @@
 		<div class="hud">
 			<button type="button"> End turn </button>
 			<button type="button"> MAKAO </button>
-			<button type="button" @click="$emit('close')"> Exit to lobby </button>
+			<button type="button" @click="$emit('close')"> Exit </button>
 		</div>
 	</div>
 </template>
