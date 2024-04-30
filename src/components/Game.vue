@@ -1,4 +1,5 @@
 <script setup>
+	import { socket } from "@/socket";
 	import { ref } from "vue";
 	const emit = defineEmits(['close']);
 	const props = defineProps({
@@ -6,13 +7,18 @@
 		playerList: { type: Array, default: ["one", "two", "three"] }
 	});
 
-  var cardHand = ref([1, 2, 3]);
-  var cardOnPile = ref(0);
+	var cardHand = ref([1, 2, 3]);
+	var cardOnPile = ref(0);
 
-  function playCard() {
-    console.log("Card played");
-    // remove from hand
-  }
+	function playCard() {
+		socket.emit("game-action", "play-card", 0);// index zamiast 0
+		console.log("Card played");
+		// remove from hand
+	}
+
+	socket.on('game-update', (gameState) => {
+		console.log("game updated", gameState);
+ 	});	
 </script>
 
 <template>
