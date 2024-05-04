@@ -9,7 +9,9 @@
 
 	let cardHand = ref(["aHearts", "aSpades", "aClubs", "aDiamonds"]);
 	let cardOnPile = ref(0);
-  let showChoice = ref(false);
+  let showDemandMenu = ref(false);
+  let colors = ["clubs", "diamonds", "hearts", "spades"];
+  let figures = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
@@ -18,7 +20,12 @@
 	}
 
   function drawCard() {
-    console.log("Drew card");
+    console.log(props.username, "drew a card.");
+  }
+
+  function demand(item) { // żądanie
+    console.log(props.username, "demands:", item)
+    showDemandMenu.value = false; 
   }
 
   function Makao() {
@@ -41,7 +48,7 @@
       </div>
 		</div>
 
-		<div class="table" v-if="!showChoice">
+		<div class="table" v-if="!showDemandMenu">
       <div class="card-pile"> {{ cardOnPile.value }} </div> <!-- where players play their cards -->
 			<img
         class="card-deck"
@@ -50,8 +57,19 @@
         @click="drawCard()"> <!-- where players draw cards from -->
 		</div>
 
-    <div class="choice" v-if="showChoice"> <!-- TODO render possible choices from a list -->
-			<button type="button" @click="showChoice = false"> Pick a choice </button>
+    <div class="demand" v-if="showDemandMenu"> <!-- TODO render possible choices from a list -->
+      <button
+        type="button"
+        v-for="color in colors"
+        @click="demand(color)">
+          {{ color }}
+      </button>
+      <button
+        type="button"
+        v-for="figure in figures"
+        @click="demand(figure)">
+          {{ figure }}
+      </button>
     </div>
 
     <div class="card-hand">
@@ -66,7 +84,7 @@
 		<div class="hud">
 			<button type="button" @click="Makao()"> MAKAO </button>
 			<button type="button" @click="$emit('close')"> Exit </button>
-			<button type="button" @click="showChoice = true"> [dev] Show choice </button>
+			<button type="button" @click="showDemandMenu = true"> [dev] Show demand menu </button>
 		</div>
 	</div>
 </template>
@@ -91,7 +109,7 @@
 		padding-right: 8px;
 	}
 
-  .choice,
+  .demand,
 	.table {
 		display: flex;
 		justify-content: center;
