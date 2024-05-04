@@ -7,8 +7,8 @@
 		playerList: { type: Array, default: ["one", "two", "three"] }
 	});
 
-	var cardHand = ref([1, 2, 3]);
-	var cardOnPile = ref(0);
+	let cardHand = ref([1, 2, 3]);
+	let cardOnPile = ref(0);
 
 	function playCard() {
 		socket.emit("game-action", "play-card", 0);// index zamiast 0
@@ -26,9 +26,10 @@
 		<div class="muted-red"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
-        {{ player }}
+        {{ player.login }}
         <br> 
-        no. of cards 
+        {{ player.cardsQuantity }}
+        {{ gameState }}
       </div>
 		</div>
 		<div class="table">

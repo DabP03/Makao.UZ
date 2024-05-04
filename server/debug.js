@@ -6,6 +6,8 @@ class DebugAccounts {
             ["debug3", "debug3"],
             ["debug4", "debug4"],
             ["asdf", "asdf"],
+            ["qwer", "qwer"],
+            ["zxcv", "zxcv"],
         ];
     }
 

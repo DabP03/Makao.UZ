@@ -10,15 +10,16 @@
 	});
 
 	let playerList = ref([]);
-  let roomList = ref(["Room 1"]);
+  	let roomList = ref([]);
 	let val = ref(0); // thanks to this value, the player list appears; TODO maybe a cleaner solution
 	let gameOpen = ref(false);
-  let roomOpen = ref(false);
+  	let roomOpen = ref(false);
 
-	socket.on('update-players', (players) => { // update-players emit from server/lobby.js
+	socket.on('lobby-update', (players, rooms) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
 		players.forEach(player => playerList.value.push(player.login)); // rewrite array
 		val.value++; // for some reason needed to render the list	
+		roomList = rooms;
 	});
 
 	function exitLobby() {
@@ -26,9 +27,18 @@
 		emit('close');
 	}
 
-  function enterRoom() {
-    roomOpen.value = true;
-    emit('logo-hide');
+  function enterRoom(room) {
+	socket.emit('game-join', room.id);
+	console.log(`Trying to enter room ${room.name} with id ${room.id}`);
+	socket.on('game-join-answer', (ans) => {
+		if (ans) {
+			console.log(`Entered room`);
+			roomOpen.value = true;
+			emit('logo-hide');
+		} else {
+			console.log("Cannot enter room")
+		}
+	});
   }
 
   function exitRoom() {
@@ -61,12 +71,12 @@
     <div class="list">
       <p class="muted-red"> Open game rooms: </p>
       <li v-for="room in roomList"> <!-- TODO unique ids for rooms -->
-        <button type="button" @click="enterRoom()"> {{ room }} </button>
+        <button type="button" @click="enterRoom(room)"> {{ room.name }} </button>
       </li>
     </div>
 
-		<button type="button" @click="startGame()"> Start game </button>
-		<button type="button" @click="exitLobby()"> Log out </button>
+		<!-- <button type="button" @click="startGame()"> Start game </button>
+		<button type="button" @click="exitLobby()"> Log out </button> -->
 	</div>
 	<div class="game" v-if="gameOpen">
 		<Game

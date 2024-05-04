@@ -1,6 +1,6 @@
 const {Game} = require('./game')
 
-exports.Makao = class extends Game {
+exports.Makao = class Makao extends Game {
     start() {
         let deck = this.shuffle(this.getDeck());
         for(let i=0; i<this.players.length; i++) {
@@ -48,6 +48,13 @@ exports.Makao = class extends Game {
         // całe karty czy nazwy?
         state.cards = player.cards;
         state.stackTop = this.stack[this.stack.length-1];
+        state.others = [];
+        for (let p of this.players) {
+            let o = {};
+            o.login = p.login;
+            o.cardsQuantity = p.cards.length;
+            state.others.push(o);
+        }
         //info o innych(ilość kart, czyja kolej, ile stoi, makao); kolejki, do wzięcia; do wyboru;
         return state;
     }
