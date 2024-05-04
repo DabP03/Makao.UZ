@@ -7,13 +7,14 @@
 		playerList: { type: Array, default: ["one", "two", "three"] }
 	});
 
-	var cardHand = ref([1, 2, 3]);
-	var cardOnPile = ref(0);
+	let cardHand = ref(["a", "b", "c", "d"]);
+	let cardOnPile = ref(0);
+  let showChoice = ref(false);
 
-	function playCard() {
-		socket.emit("game-action", "play-card", 0);// index zamiast 0
-		console.log("Card played");
-		// remove from hand
+	function playCard(cardName, index) {
+		socket.emit("game-action", "play-card", index);
+		cardHand.value.splice(index, 1); // remove the card from hand
+		console.log("Card played:", cardName, index);
 	}
 
 	socket.on('game-update', (gameState) => {
@@ -31,17 +32,24 @@
         no. of cards 
       </div>
 		</div>
-		<div class="table">
+
+		<div class="table" v-if="!showChoice">
       <div class="card-pile"> {{ cardOnPile.value }} </div> <!-- where players play their cards -->
 			<div class="card-deck"> Card deck </div> <!-- where players draw cards from -->
 		</div>
+
+    <div class="choice" v-if="showChoice"> <!-- TODO render possible choices from a list -->
+			<button type="button" @click="showChoice = false"> Pick a choice </button>
+    </div>
+
 		<div class="card-hand">
-      <div class="card" v-for="card in cardHand" @click="playCard()"> {{ card }} </div>	
+      <div class="card" v-for="(cardName, index) in cardHand" @click="playCard(cardName, index)"> {{ cardName }} {{ index }} </div>	
 		</div>
+
 		<div class="hud">
-			<button type="button"> End turn </button>
 			<button type="button"> MAKAO </button>
 			<button type="button" @click="$emit('close')"> Exit </button>
+			<button type="button" @click="showChoice = true"> [dev] Show choice </button>
 		</div>
 	</div>
 </template>
@@ -66,6 +74,7 @@
 		padding-right: 8px;
 	}
 
+  .choice,
 	.table {
 		display: flex;
 		justify-content: center;
@@ -93,12 +102,14 @@
 		height: 40%;
 		display: flex;
     justify-content: center;
-	}
+		align-items: center;
+  }
 
   .card {
     background-color: white;
-    min-width: 63px;
-		min-height: 88px;
+    color: black;
+    width: 63px;
+		height: 88px;
     margin: 8px;
   }
 
