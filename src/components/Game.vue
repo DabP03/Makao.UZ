@@ -7,7 +7,7 @@
 		playerList: { type: Array, default: ["one", "two", "three"] }
 	});
 
-	let cardHand = ref(["a", "b", "c", "d"]);
+	let cardHand = ref(["aHearts", "aSpades", "aClubs", "aDiamonds"]);
 	let cardOnPile = ref(0);
   let showChoice = ref(false);
 
@@ -42,9 +42,14 @@
 			<button type="button" @click="showChoice = false"> Pick a choice </button>
     </div>
 
-		<div class="card-hand">
-      <div class="card" v-for="(cardName, index) in cardHand" @click="playCard(cardName, index)"> {{ cardName }} {{ index }} </div>	
-		</div>
+    <div class="card-hand">
+      <img
+        class="card" 
+        :src="'/src/assets/cardSprites/' + cardName + '.png'" 
+        :alt=cardName
+        v-for="(cardName, index) in cardHand" 
+        @click="playCard(cardName, index)">
+    </div>
 
 		<div class="hud">
 			<button type="button"> MAKAO </button>
@@ -106,11 +111,21 @@
   }
 
   .card {
-    background-color: white;
-    color: black;
     width: 63px;
 		height: 88px;
     margin: 8px;
+  }
+
+  .card:hover {
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #ffff66;
+  }
+
+  .card:active {
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #66ff99;
   }
 
 	.hud {
