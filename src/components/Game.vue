@@ -17,6 +17,14 @@
 		console.log("Card played:", cardName, index);
 	}
 
+  function drawCard() {
+    console.log("Drew card");
+  }
+
+  function Makao() {
+    console.log("Idioto, gramy w pokera.");
+  }
+
 	socket.on('game-update', (gameState) => {
 		console.log("game updated", gameState);
  	});	
@@ -35,7 +43,11 @@
 
 		<div class="table" v-if="!showChoice">
       <div class="card-pile"> {{ cardOnPile.value }} </div> <!-- where players play their cards -->
-			<div class="card-deck"> Card deck </div> <!-- where players draw cards from -->
+			<img
+        class="card-deck"
+        src="/src/assets/cardSprites/reverseRed.png"
+        alt="Card deck"
+        @click="drawCard()"> <!-- where players draw cards from -->
 		</div>
 
     <div class="choice" v-if="showChoice"> <!-- TODO render possible choices from a list -->
@@ -52,7 +64,7 @@
     </div>
 
 		<div class="hud">
-			<button type="button"> MAKAO </button>
+			<button type="button" @click="Makao()"> MAKAO </button>
 			<button type="button" @click="$emit('close')"> Exit </button>
 			<button type="button" @click="showChoice = true"> [dev] Show choice </button>
 		</div>
@@ -95,13 +107,6 @@
 		margin: 8px;
 	}
 
-	.card-deck {
-		min-width: 63px;
-		min-height: 88px;
-		background-color: #222222;
-		margin: 8px;
-	}
-
 	.card-hand {
 		background-color: #222222;
 		height: 40%;
@@ -110,22 +115,23 @@
 		align-items: center;
   }
 
+  .card-deck,
   .card {
     width: 63px;
 		height: 88px;
     margin: 8px;
   }
 
+  .card-deck:hover,
   .card:hover {
-    border-style: solid;
-    border-radius: 10px;
-    border-color: #ffff66;
+    position: relative;
+    right: 5px;
+    bottom: 5px;
   }
 
+  .card-deck:active,
   .card:active {
-    border-style: solid;
-    border-radius: 10px;
-    border-color: #66ff99;
+    scale: 90%;
   }
 
 	.hud {
