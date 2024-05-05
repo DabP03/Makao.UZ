@@ -1,32 +1,21 @@
-exports.Game = class {
+class Game {
     constructor() {
         this.id = getId();
         this.table = {};
         this.players = [];
-        this.getDeck = getPockerDeck;
-    }
-    shuffle(table) {
-        let shuffled = [];
-        let r;
-        while(table.length > 0) {
-            r = Math.floor(Math.random() * table.length);
-            shuffled.push(table[r]);
-            table.splice(r,1);
-        }
-        return shuffled;
     }
     addPlayer(user) {
-        this.players.push(structuredClone(user));
+        this.players.push(user);
     }
-    getPlayer(user) {
-        for (let p of this.players) {
-            if (p.socketID = user.socketID) return p;
-        }
-        return null;
+    start() {
+
     }
-    getState(player) {}
-    start() {}
-    action() {}
+    stop() {
+
+    }
+    action() {
+        
+    }
 };
 
 const getId = (()=>{
@@ -35,6 +24,15 @@ const getId = (()=>{
         return id++;
     }
 })();
+
+function shuffle(table) {
+    let shuffled = [];
+    while(table.length > 0) {
+        r = Math.floor(Math.random() * table.length);
+        shuffled.push(table[r]);
+        table.splice(r,1);
+    }
+}
 
 function getPockerDeck() {
     const suits = ['♥', '♣', '♦', '♠'];
@@ -54,11 +52,11 @@ function getPockerDeck() {
 class Card {
     constructor(name) {
         this.name = name;
+        this.symbol = name.slice(0, -1);
+        this.suit = name.slice(-1);
     }
-    get symbol() {
-        return this.name.slice(0, -1);
-    }
-    get suit() {
-        return this.name.slice(-1);
-    }
+}
+
+module.exports = {
+    Game: Game,
 }

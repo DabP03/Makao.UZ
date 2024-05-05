@@ -1,3 +1,6 @@
+const {User} = require("./db/user");
+const lobby = require("./lobby");
+
 class DebugAccounts {
     constructor() {
         this.accounts = [

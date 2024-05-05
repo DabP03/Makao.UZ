@@ -1,4 +1,4 @@
-exports.Games = class Games {
+class Games {
     constructor() {
         this.makao = {
             wins: 0,
@@ -16,4 +16,8 @@ exports.Games = class Games {
             }
         }
     }
+}
+
+module.exports = {
+    Games: Games,
 }
