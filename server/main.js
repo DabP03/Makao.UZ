@@ -7,34 +7,32 @@ const lobby = require('./lobby');
 const debugAccounts = require("./debug").DebugAccounts;
 
 
-exports.main = (io) => {
+
+function main(io) {
     lobby.setIo(io);
 
     io.on('connection', (socket) => {
-        console.log('A user connected ' + socket.id);
 
-        socket.on('disconnect', () => {
-            console.log('User disconnected');
-        });
+        function hashPassword(password) {
+            const saltRounds = 10;
+            const hashedPassword = bcrypt // hashowenie hasla
+                .genSalt(saltRounds)
+                .then(salt => {
+                    return bcrypt.hash(password, salt)
+                })
+                .catch(err => console.error(err.message));
+            return hashedPassword;
+}
 
-        socket.on('login-submit', async (login, password) => {
-
+        async function loginSubmit(login, password) {
             if (debugAccounts.isDebug(login, password)) {
                 console.log("debug");
                 socket.emit('login-submit-answer', true);
                 console.log(`Logged: ${login} | ${password}`);
                 lobby.addUser(socket, new User(socket.id, login))
             } else {
-                const saltRounds = 10;
-                const hashedPassword = bcrypt // hashowenie hasla
-                    .genSalt(saltRounds)
-                    .then(salt => {
-                        return bcrypt.hash(password, salt)
-                    })
-                    .catch(err => console.error(err.message));
-
+                const hashedPassword = hashPassword(password);
                 const result = await mongo.logInPlayer(login, hashedPassword);
-
                 if (result != false) {
                     socket.emit('login-submit-answer', true);
                     console.log(`Logged: ${login} | ${hashedPassword}`);
@@ -43,27 +41,36 @@ exports.main = (io) => {
                     socket.emit('login-submit-answer', false);
                 }
             }
-        });
+        }
 
-        socket.on('register-submit', async (login, password) => {
+        async function registerSubmit(login, password) {
             if (debugAccounts.isDebug(login, password)) {
                 console.log("debug");
                 socket.emit('register-submit-answer', true);
                 console.log(`Registered: ${login} | ${password}`);
             } else {
-                const saltRounds = 10;
-                const hashedPassword = bcrypt
-                    .genSalt(saltRounds)
-                    .then(salt => {
-                        return bcrypt.hash(password, salt)
-                    })
-                    .catch(err => console.error(err.message));
+                const hashedPassword = hashPassword(password);
                 const result = await mongo.signInPlayer(login, hashedPassword);
                 socket.emit('register-submit-answer', result);
                 if (result) {
                     console.log(`Registered: ${login} | ${password}`);
                 }
             }
+
+        }
+
+        console.log('A user connected ' + socket.id);
+
+        socket.on('disconnect', () => {
+            console.log('User disconnected');
         });
+
+        socket.on('login-submit', loginSubmit);
+
+        socket.on('register-submit', registerSubmit);
     });
+}
+
+module.exports = {
+    main: main,
 }
