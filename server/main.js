@@ -22,7 +22,7 @@ function main(io) {
                 })
                 .catch(err => console.error(err.message));
             return hashedPassword;
-}
+        }
 
         async function loginSubmit(login, password) {
             if (debugAccounts.isDebug(login, password)) {
