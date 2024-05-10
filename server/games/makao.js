@@ -21,6 +21,7 @@ class Makao extends Game {
 
             case "play-card":
                 player.cards[arg]?.onPlay?.();
+                console.log(player.cards[0].filename);
                 return true;
             break;
                 

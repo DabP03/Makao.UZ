@@ -81,13 +81,14 @@ class Card {
             ["♦", "Diamonds"],
             ["♠", "Spades"],
         ];
-        let correctSuit;
-        for (let suitPair of fileSuits) {
-            if (this.suit == suitPair[0]) {
-                correctSuit = suitPair[1];
+        let correctSuit = (() => {
+            for (let suitPair of fileSuits) {
+                if (this.suit == suitPair[0]) {
+                    return suitPair[1];
+                }
             }
-        }
-        return this.symbol + correctSuit + ".png";
+        })();
+        return this.symbol.toLowerCase() + correctSuit + ".png";
     }
 }
 
