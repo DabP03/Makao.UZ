@@ -75,19 +75,19 @@ class Card {
         return this.name.slice(-1);
     }
     get filename() {
-        return this.name.toLowerCase() + (() => {
-            const fileSuits = [
-                ["♥", "Hearts"],
-                ["♣", "Clubs"],
-                ["♦", "Diamonds"],
-                ["♠", "Spades"],
-            ];
-            for (let suit of fileSuits) {
-                if (this.suit == suit[0]) {
-                    return suit[1] + ".png";
-                }
+        const fileSuits = [
+            ["♥", "Hearts"],
+            ["♣", "Clubs"],
+            ["♦", "Diamonds"],
+            ["♠", "Spades"],
+        ];
+        let correctSuit;
+        for (let suitPair of fileSuits) {
+            if (this.suit == suitPair[0]) {
+                correctSuit = suitPair[1];
             }
-        });
+        }
+        return this.symbol + correctSuit + ".png";
     }
 }
 
