@@ -20,7 +20,8 @@
 		val.value++; // for some reason needed to render the list	
 	});
 
-	socket.on('game-start', () => {
+	socket.on('game-start', (gamestate) => {
+		console.log(gamestate);
 		gameOpen.value = true;
 	});
 

@@ -21,6 +21,7 @@ class Makao extends Game {
 
             case "play-card":
                 player.cards[arg]?.onPlay?.();
+                return true;
             break;
                 
             case "draw-card":
