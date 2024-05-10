@@ -10,18 +10,23 @@
 
 	let playerList = ref([]);
 	let val = ref(0); // thanks to this value, the player list appears; TODO maybe a cleaner solution
-  let gameOpen = ref(false);
+ 	let gameOpen = ref(false);
+	let gamestate = ref(null);
 
 //  TODO only show players in that particular game room, not in entire lobby
-  socket.on('update-players', (players) => { // update-players emit from server/lobby.js
+  socket.on('game-room-update', (players) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
 		players.forEach(player => playerList.value.push(player.login)); // rewrite array
 		val.value++; // for some reason needed to render the list	
 	});
 
-  function startGame() {
-		emit('game-start');
+	socket.on('game-start', () => {
 		gameOpen.value = true;
+	});
+
+  function startGame() {
+		socket.emit('game-start');
+		emit('game-start');
 	}
 
 	function exitGame() {
@@ -43,7 +48,7 @@
   <div class="game" v-if="gameOpen">
 		<Game
 			:username=username
-      :playerList=playerList
+			:playerList=playerList
 			@close="exitGame()"/>
 	</div>
 </template>

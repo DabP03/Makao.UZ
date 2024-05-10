@@ -42,9 +42,10 @@
 		<div class="muted-red"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
-        {{ player }}
+        {{ player.login }}
         <br> 
-        no. of cards 
+        {{ player.cardsQuantity }}
+        {{ gameState }}
       </div>
 		</div>
 

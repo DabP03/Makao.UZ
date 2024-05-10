@@ -18,9 +18,13 @@ exports.Game = class {
     addPlayer(user) {
         this.players.push(structuredClone(user));
     }
+    removePlayer(user) {
+        this.players.splice(this.players.indexOf(user), 1);
+    }
     getPlayer(user) {
+        console.log(user)
         for (let p of this.players) {
-            if (p.socketID = user.socketID) return p;
+            if (p.socket = user.socket) return p;
         }
         return null;
     }
