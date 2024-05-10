@@ -3,14 +3,16 @@ let games = [];
 let io;
 let {Makao} = require('./games/games');
 
-exports.setIo = (newio) => {
+// exports.setIo = (newio) => {
+function setIo(newio) {
     io = newio;
 }
 
 games.push(new Makao()); //tmp
 getGame(0);
 
-exports.addUser = (socket, user) => {
+// exports.addUser = (socket, user) => {
+function addUser(socket, user) {
     users.push(user);
     socket.join('lobby');
     io.to('lobby').emit('lobby-update', users, getRoomList());
@@ -32,10 +34,9 @@ exports.addUser = (socket, user) => {
     socket.on('game-join', joinGame);
 
 
-    function createGame(name) {
-        games.push(new Makao());
-        console.log("Game created");
-    }
+    // function createGame(name) {
+    //     games.push(new Makao())
+    // }
 
     function joinGame(id) {
 
@@ -104,4 +105,9 @@ function getGame(id) {
     }
     console.log(`gameId: ${id}`)
     return game;
+}
+
+module.exports = {
+    setIo: setIo,
+    addUser: addUser,
 }

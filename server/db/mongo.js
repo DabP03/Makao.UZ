@@ -2,7 +2,7 @@ const {MongoClient} = require('mongodb');
 const {UserData} = require('./user');
 const settings = require('../../serverConfig.json');
 
-exports.Mongo = class Mongo {
+class Mongo {
     constructor(uri) {
         this.uri = uri;
         this.client = new MongoClient(this.uri);
@@ -93,4 +93,8 @@ exports.Mongo = class Mongo {
             await this.client.close();
         }
     }
+}
+
+module.exports = {
+    Mongo: Mongo,
 }
