@@ -49,7 +49,6 @@
   <div class="game" v-if="gameOpen">
 		<Game
 			:username=username
-			:playerList=playerList
 			@close="exitGame()"/>
 	</div>
 </template>
