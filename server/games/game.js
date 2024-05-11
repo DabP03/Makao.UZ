@@ -74,6 +74,21 @@ class Card {
     get suit() {
         return this.name.slice(-1);
     }
+    get filename() {
+        return (() => {
+            const fileSuits = [
+                ["♥", "Hearts"],
+                ["♣", "Clubs"],
+                ["♦", "Diamonds"],
+                ["♠", "Spades"],
+            ];
+            for (let suitPair of fileSuits) {
+                if (this.suit == suitPair[0]) {
+                    return this.symbol.toLowerCase() + suitPair[1] + ".png";
+                }
+            }
+        })();
+    }
 }
 
 module.exports = {
