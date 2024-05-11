@@ -58,7 +58,7 @@ function getPockerDeck() {
             deck.push(new Card(i + suit));
         }
         deck.push(new Card('J' + suit));
-        deck.push(new Card('D' + suit));
+        deck.push(new Card('Q' + suit));
         deck.push(new Card('K' + suit));
     }
     return deck;
