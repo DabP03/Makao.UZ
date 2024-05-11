@@ -60,6 +60,7 @@ function addUser(socket, user) {
                 game.start();
                 player = game.getPlayer(user);
                 io.to(game.id).emit('game-start', game.getState(player));
+                io.to(game.id).emit('game-start', game.getState(player));
                 console.log("Game " + game.id + " started");
                 socket.on("game-action", performGameAction);
     
