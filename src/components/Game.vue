@@ -39,9 +39,10 @@
   });
 
 	socket.on('game-update', (gameState) => {
-    cardHand.value = Array.from(gameState.cards); //need filename
+    cardHand.value = Array.from(gameState.cards);
     cardOnPile.value = gameState.stackTop;
 		console.log("game updated", gameState);
+    console.log(cardHand.value[0].filename); //test
  	});	
 </script>
 
@@ -83,10 +84,10 @@
     <div class="card-hand">
       <img
         class="card" 
-        :src="'/src/assets/cardSprites/' + cardName + '.png'" 
-        :alt=cardName.name
-        v-for="(cardName, index) in cardHand" 
-        @click="playCard(cardName, index)">
+        :src="'/src/assets/cardSprites/' + card.filename" 
+        :alt=card.name
+        v-for="(card, index) in cardHand" 
+        @click="playCard(card, index)">
     </div>
 
 		<div class="hud">
