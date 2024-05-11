@@ -67,15 +67,7 @@ function getPockerDeck() {
 class Card {
     constructor(name) {
         this.name = name;
-    }
-    get symbol() {
-        return this.name.slice(0, -1);
-    }
-    get suit() {
-        return this.name.slice(-1);
-    }
-    get filename() {
-        return (() => {
+        this.filename = (() => {
             const fileSuits = [
                 ["♥", "Hearts"],
                 ["♣", "Clubs"],
@@ -89,6 +81,27 @@ class Card {
             }
         })();
     }
+    get symbol() {
+        return this.name.slice(0, -1);
+    }
+    get suit() {
+        return this.name.slice(-1);
+    }
+    // get filename() {
+    //     return (() => {
+    //         const fileSuits = [
+    //             ["♥", "Hearts"],
+    //             ["♣", "Clubs"],
+    //             ["♦", "Diamonds"],
+    //             ["♠", "Spades"],
+    //         ];
+    //         for (let suitPair of fileSuits) {
+    //             if (this.suit == suitPair[0]) {
+    //                 return this.symbol.toLowerCase() + suitPair[1] + ".png";
+    //             }
+    //         }
+    //     })();
+    // }
 }
 
 module.exports = {
