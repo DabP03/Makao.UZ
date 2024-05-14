@@ -4,6 +4,8 @@ class Game {
         this.table = {};
         this.players = [];
         this.getDeck = getPockerDeck;
+        this.minPlayers = 2;
+        this.maxPlayers = Infinity;
     }
     shuffle(table) {
         let shuffled = [];
@@ -22,11 +24,14 @@ class Game {
         this.players.splice(this.players.indexOf(user), 1);
     }
     getPlayer(user) {
-        console.log(user)
         for (let p of this.players) {
             if (p.socket = user.socket) return p;
         }
         return null;
+    }
+    canStart() {
+        let n = this.players.length;
+        return (n >= this.minPlayers && n <= this.maxPlayers);
     }
     getState(player) {}
     start() {}

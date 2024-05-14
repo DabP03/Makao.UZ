@@ -8,8 +8,15 @@ function setIo(newio) {
     io = newio;
 }
 
-games.push(new Makao()); //tmp
-getGame(0);
+// tmp start
+games.push(new Makao());
+let g = getGame(0);
+g.addPlayer({login:"typ1"})
+g.addPlayer({login:"typ2"})
+g.addPlayer({login:"typ3"})
+console.log(g.canStart())
+g.start()
+// tmp stop
 
 // exports.addUser = (socket, user) => {
 function addUser(socket, user) {
@@ -57,18 +64,19 @@ function addUser(socket, user) {
             });
     
             function startGame() {
-                game.start();
-                player = game.getPlayer(user);
-                io.to(game.id).emit('game-start', game.getState(player));
-                console.log("Game " + game.id + " started");
-                socket.on("game-action", performGameAction);
-    
-                function performGameAction(action, arg) {
-                    if (game.action(player, action, arg)) {
-                        io.to(game.id).emit('game-update', game.getState(player));
+                if (game.canStart()) {
+                    game.start();
+                    player = game.getPlayer(user);
+                    io.to(game.id).emit('game-start', game.getState(player));
+                    console.log("Game " + game.id + " started");
+                    socket.on("game-action", performGameAction);
+        
+                    function performGameAction(action, arg) {
+                        if (game.action(player, action, arg)) {
+                            io.to(game.id).emit('game-update', game.getState(player));
+                        }
                     }
                 }
-                
             }
 
         } else {
@@ -103,7 +111,6 @@ function getGame(id) {
             break;
         }
     }
-    console.log(`gameId: ${id}`)
     return game;
 }
 
