@@ -3,7 +3,7 @@ const {Game} = require('./game')
 class Makao extends Game {
     start() {
         // let deck = this.shuffle(this.getDeck().concat(this.getDeck()));
-        let deck = this.getDeck();
+        let deck = setOnplays(this, this.getDeck());
         for(let i=0; i<this.players.length; i++) {
             this.players[i].index = i;
             this.players[i].cards = [];
@@ -15,41 +15,74 @@ class Makao extends Game {
         // this.stack.push(deck.pop());
         this.stack.push(deck[0]);
         this.restOfCards = deck;
-        this.lastMovePlayerIndex = 0;
+        this.lastMovePlayerIndex = 1;
+        this.special = {name: "none", value: null}; // !!! przedyskutować !!!
+        this.toChoose = null;
+        this.choosingPlayerIndex = 0;
 
+        //debug start
+        this.players[0].cards.unshift(deck[0])
         this.action(this.players[0], 'play-card', 0);
-        console.log(this.players[0])
-        console.log(this.stack)
+        this.players[0].cards.unshift(deck[0])
+        this.action(this.players[0], 'play-card', 0);
+        this.action(this.players[0], 'choose', 1);
+        this.players[1].cards.unshift(deck[2])
+        this.action(this.players[1], 'play-card', 0);
+        this.players[1].cards.unshift(deck[15])
+        this.action(this.players[1], 'play-card', 0);
+
+        let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
+        //debug stop
     }
 
     action(player, action, arg) {
-        // console.log(player.login, action, arg);
+        if (this.toChoose && ((action != 'choose') || (player.index != this.choosingPlayerIndex))) {
+            console.log(`Player ${this.choosingPlayerIndex} must choose`);
+            return false;
+        }
 
         switch (action) {
 
             case "play-card":
                 if (arg >= player.cards.length) break;
+
                 let card = player.cards[arg];
                 let stackCard = this.stack[this.stack.length-1];
+                let indexOfPlayerBefore = (player.index-1)>=0 ? (player.index-1) : this.players.length-1;
+
                 let sameSymbols = stackCard.symbol == card.symbol;
                 let sameSuits = stackCard.suit == card.suit;
                 let continuing = this.lastMovePlayerIndex == player.index;
-                let playerBeforePlayed = this.lastMovePlayerIndex == getIndexOfPlayerBefore(player.index);
+                let expectedToMove = this.lastMovePlayerIndex == indexOfPlayerBefore; // dostosować do 4 i K
 
                 let canPlay = false;
                 if (
                     (sameSuits && sameSymbols) ||
-                    (continuing && sameSymbols) ||
-                    (playerBeforePlayed && (sameSuits && sameSymbols))
+                    (continuing && sameSymbols)
                 ) {
                     canPlay = true;
+                }
+                
+                if (expectedToMove) {
+                    switch (this.special.name) {
+                        case "suit-change":
+                            if (this.special.value == card.suit) canPlay = true;
+                        break;
+                        default:
+                            if (sameSuits || sameSymbols) canPlay = true;
+                    }
                 }
 
                 if (canPlay) {
                     player.cards.splice(arg, 1);
                     this.stack.push(card);
-                    player.cards[arg]?.onPlay?.();
+                    this.lastMovePlayerIndex = player.index;
+                    this.special = {name: "none", value: null}; //??
+                    card?.onPlay?.(this);
+                    console.log(`${player.login} played ${card.name}`)
                     return true;
+                } else {
+                    console.log(`${player.login} can't play ${card.name}`)
                 }
             break;
                 
@@ -58,7 +91,13 @@ class Makao extends Game {
             break;
 
             case "choose":
-                //
+                let choice = this.toChoose[arg];
+                if (choice) {
+                    this.special.name = "suit-change";
+                    this.special.value = choice;
+                    this.toChoose = null;
+                }
+                console.log("choosing " + choice)
             break;
 
             case "say-makao":
@@ -71,19 +110,10 @@ class Makao extends Game {
             
         }
         return false;
-
-        function getIndexOfPlayerBefore(index) {
-            i = index - 1;
-            if (i == -1) {
-                i = this.players.length - 1;
-            }
-            return i
-        }
     }
 
     getState(player) {
         let state = {};
-        // całe karty czy nazwy?
         state.cards = player.cards;
         state.stackTop = this.stack[this.stack.length-1];
         state.others = [];
@@ -93,9 +123,25 @@ class Makao extends Game {
             o.cardsQuantity = p.cards.length;
             state.others.push(o);
         }
-        //info o innych(ilość kart, czyja kolej, ile stoi, makao); kolejki, do wzięcia; do wyboru;
+        state.toChoose = (player.index == this.choosingPlayerIndex) ? this.toChoose : null;
+        state.special = this.special;
         return state;
     }
+}
+
+function setOnplays(game, deck) {
+    for (let i=0; i<deck.length; i++) {
+        let card = deck[i];
+        switch (card.symbol) {
+            case 'A':
+                card.onPlay = (game) => {
+                    game.choosingPlayerIndex = game.lastMovePlayerIndex;
+                    game.toChoose = ['♥', '♣', '♦', '♠'];
+                }
+            break;
+        }
+    }
+    return deck;
 }
 
 module.exports = {

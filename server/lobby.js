@@ -14,8 +14,7 @@ let g = getGame(0);
 g.addPlayer({login:"typ1"})
 g.addPlayer({login:"typ2"})
 g.addPlayer({login:"typ3"})
-console.log(g.canStart())
-g.start()
+if(g.canStart()) g.start()
 // tmp stop
 
 // exports.addUser = (socket, user) => {
