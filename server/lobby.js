@@ -9,7 +9,7 @@ function setIo(newio) {
 }
 
 // tmp start
-// games.push(new Makao());
+games.push(new Makao());
 // let g = getGame(0);
 // g.addPlayer({login:"typ1"})
 // g.addPlayer({login:"typ2"})

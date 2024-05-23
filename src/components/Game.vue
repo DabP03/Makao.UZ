@@ -15,7 +15,7 @@
 
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
-		cardHand.value.splice(index, 1); // remove the card from hand; TODO make card removal server-side?
+		// cardHand.value.splice(index, 1); // remove the card from hand; TODO make card removal server-side?
 		console.log("Card played:", cardName.name, index);
 	}
 
