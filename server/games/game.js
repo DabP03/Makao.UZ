@@ -63,7 +63,7 @@ function getPockerDeck() {
             deck.push(new Card(i + suit));
         }
         deck.push(new Card('J' + suit));
-        deck.push(new Card('D' + suit));
+        deck.push(new Card('Q' + suit));
         deck.push(new Card('K' + suit));
     }
     return deck;
@@ -72,6 +72,19 @@ function getPockerDeck() {
 class Card {
     constructor(name) {
         this.name = name;
+        this.filename = (() => {
+            const fileSuits = [
+                ["♥", "Hearts"],
+                ["♣", "Clubs"],
+                ["♦", "Diamonds"],
+                ["♠", "Spades"],
+            ];
+            for (let suitPair of fileSuits) {
+                if (this.suit == suitPair[0]) {
+                    return this.symbol.toLowerCase() + suitPair[1] + ".png";
+                }
+            }
+        })();
     }
     get symbol() {
         return this.name.slice(0, -1);
@@ -79,6 +92,21 @@ class Card {
     get suit() {
         return this.name.slice(-1);
     }
+    // get filename() {
+    //     return (() => {
+    //         const fileSuits = [
+    //             ["♥", "Hearts"],
+    //             ["♣", "Clubs"],
+    //             ["♦", "Diamonds"],
+    //             ["♠", "Spades"],
+    //         ];
+    //         for (let suitPair of fileSuits) {
+    //             if (this.suit == suitPair[0]) {
+    //                 return this.symbol.toLowerCase() + suitPair[1] + ".png";
+    //             }
+    //         }
+    //     })();
+    // }
 }
 
 module.exports = {

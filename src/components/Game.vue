@@ -4,9 +4,9 @@
 	const emit = defineEmits(['close']);
 	const props = defineProps({
 		username: { type: String },
-		playerList: { type: Array, default: ["one", "two", "three"] }
 	});
 
+  let playerList = ref([]);
 	let cardHand = ref(["aHearts", "aSpades", "aClubs", "aDiamonds"]);
 	let cardOnPile = ref(0);
   let showDemandMenu = ref(false);
@@ -15,15 +15,15 @@
 
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
-		cardHand.value.splice(index, 1); // remove the card from hand
-		console.log("Card played:", cardName, index);
+		cardHand.value.splice(index, 1); // remove the card from hand; TODO make card removal server-side?
+		console.log("Card played:", cardName.name, index);
 	}
 
-  function drawCard() {
+  function drawCard() { // TODO
     console.log(props.username, "drew a card.");
   }
 
-  function demand(item) { // żądanie
+  function demand(item) { // TODO
     console.log(props.username, "demands:", item)
     showDemandMenu.value = false; 
   }
@@ -32,7 +32,17 @@
     console.log("Idioto, gramy w pokera.");
   }
 
+  socket.on('game-start', (gameState) => { //not working yet
+    playerList.value = Array.from(gameState.others);
+    cardHand.value = Array.from(gameState.cards);
+    cardOnPile.value = gameState.stackTop;
+    console.log("game started", gameState);
+  });
+
 	socket.on('game-update', (gameState) => {
+    playerList.value = Array.from(gameState.others);
+    cardHand.value = Array.from(gameState.cards);
+    cardOnPile.value = gameState.stackTop;
 		console.log("game updated", gameState);
  	});	
 </script>
@@ -45,12 +55,14 @@
         {{ player.login }}
         <br> 
         {{ player.cardsQuantity }}
-        {{ gameState }}
       </div>
 		</div>
 
 		<div class="table" v-if="!showDemandMenu">
-      <div class="card-pile"> {{ cardOnPile.value }} </div> <!-- where players play their cards -->
+      <img
+        class="card-pile"
+        :src="'/src/assets/cardSprites/' + cardOnPile.filename"
+        :alt=cardOnPile.name> <!-- where players play their cards -->
 			<img
         class="card-deck"
         src="/src/assets/cardSprites/reverseRed.png"
@@ -58,7 +70,7 @@
         @click="drawCard()"> <!-- where players draw cards from -->
 		</div>
 
-    <div class="demand" v-if="showDemandMenu"> <!-- TODO render possible choices from a list -->
+    <div class="demand" v-if="showDemandMenu"> <!-- TODO render either only colors or figures -->
       <button
         type="button"
         v-for="color in colors"
@@ -76,10 +88,10 @@
     <div class="card-hand">
       <img
         class="card" 
-        :src="'/src/assets/cardSprites/' + cardName + '.png'" 
-        :alt=cardName
-        v-for="(cardName, index) in cardHand" 
-        @click="playCard(cardName, index)">
+        :src="'/src/assets/cardSprites/' + card.filename" 
+        :alt=card.name
+        v-for="(card, index) in cardHand" 
+        @click="playCard(card, index)">
     </div>
 
 		<div class="hud">
@@ -92,6 +104,7 @@
 
 <style scoped> /* TODO rethink divs height when they're filled with content */
 	.game {
+		background-color: #222222;
   	text-align: center; /* always centered, no matter the screen size */
 		display: flex;
 		flex-direction: column;
@@ -115,13 +128,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: brown;
+		background-color: #222222;
 		height: 100%;
 	}
 
 	.card-pile {
-		min-width: 63px; /* 88x63 mm - size of Piatnik poker cards */
-		min-height: 88px;
+		width: 63px; /* 88x63 mm - size of Piatnik poker cards */
+		height: 88px;
 		background-color: #222222;
 		margin: 8px;
 	}
@@ -154,7 +167,7 @@
   }
 
 	.hud {
-		background-color: blue;
+		background-color: #222222;
 		height: 15%;
 		display: flex;
 		justify-content: center; /* Centers content width-wise */
