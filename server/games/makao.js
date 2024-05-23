@@ -21,15 +21,15 @@ class Makao extends Game {
         this.choosingPlayerIndex = 0;
 
         //debug start
-        this.players[0].cards.unshift(deck[0])
-        this.action(this.players[0], 'play-card', 0);
-        this.players[0].cards.unshift(deck[0])
-        this.action(this.players[0], 'play-card', 0);
-        this.action(this.players[0], 'choose', 1);
-        this.players[1].cards.unshift(deck[2])
-        this.action(this.players[1], 'play-card', 0);
-        this.players[1].cards.unshift(deck[15])
-        this.action(this.players[1], 'play-card', 0);
+        // this.players[0].cards.unshift(deck[0])
+        // this.action(this.players[0], 'play-card', 0);
+        // this.players[0].cards.unshift(deck[0])
+        // this.action(this.players[0], 'play-card', 0);
+        // this.action(this.players[0], 'choose', 1);
+        // this.players[1].cards.unshift(deck[2])
+        // this.action(this.players[1], 'play-card', 0);
+        // this.players[1].cards.unshift(deck[15])
+        // this.action(this.players[1], 'play-card', 0);
 
         let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
         //debug stop
