@@ -7,8 +7,10 @@
 	});
 
   let playerList = ref([]);
-	let cardHand = ref(["aHearts", "aSpades", "aClubs", "aDiamonds"]);
+	let cardHand = ref([]);
 	let cardOnPile = ref(0);
+  let special = ref(0);
+  let toChoose = ref(0);
   let showDemandMenu = ref(false);
   let colors = ["clubs", "diamonds", "hearts", "spades"];
   let figures = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
@@ -16,11 +18,12 @@
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
 		// cardHand.value.splice(index, 1); // remove the card from hand; TODO make card removal server-side?
-		console.log("Card played:", cardName.name, index);
+		// console.log("Card played:", cardName.name, index);
 	}
 
   function drawCard() { // TODO
-    console.log(props.username, "drew a card.");
+    socket.emit("game-action", "draw-card");
+    //console.log(props.username, "drew a card.");
   }
 
   function demand(item) { // TODO
@@ -29,10 +32,10 @@
   }
 
   function Makao() {
-    console.log("Idioto, gramy w pokera.");
+    socket.emit("game-action", "say-makao");
   }
 
-  socket.on('game-start', (gameState) => { //not working yet
+  socket.on('game-start', (gameState) => { // TODO delete?
     playerList.value = Array.from(gameState.others);
     cardHand.value = Array.from(gameState.cards);
     cardOnPile.value = gameState.stackTop;
@@ -43,6 +46,11 @@
     playerList.value = Array.from(gameState.others);
     cardHand.value = Array.from(gameState.cards);
     cardOnPile.value = gameState.stackTop;
+    special.value = gameState.special;
+    toChoose.value = gameState.toChoose;
+    if(toChoose.value != null) {
+      showDemandMenu.value = true;
+    }
 		console.log("game updated", gameState);
  	});	
 </script>
@@ -58,6 +66,10 @@
       </div>
 		</div>
 
+    <div class="card-effects">
+      <div v-if="special.value != null"> Special: {{ special.value.name }} </div> 
+    </div>
+
 		<div class="table" v-if="!showDemandMenu">
       <img
         class="card-pile"
@@ -70,18 +82,12 @@
         @click="drawCard()"> <!-- where players draw cards from -->
 		</div>
 
-    <div class="demand" v-if="showDemandMenu"> <!-- TODO render either only colors or figures -->
+    <div class="demand" v-if="showDemandMenu">
       <button
         type="button"
-        v-for="color in colors"
-        @click="demand(color)">
-          {{ color }}
-      </button>
-      <button
-        type="button"
-        v-for="figure in figures"
-        @click="demand(figure)">
-          {{ figure }}
+        v-for="option in toChoose"
+        @click="demand(option)">
+          {{ option }}
       </button>
     </div>
 
