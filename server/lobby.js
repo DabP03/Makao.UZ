@@ -16,6 +16,7 @@ games.push(new Makao());
 // g.addPlayer({login:"typ2"})
 // g.addPlayer({login:"typ3"})
 // if(g.canStart()) g.start()
+
 // tmp stop
 
 // exports.addUser = (socket, user) => {
