@@ -2,11 +2,12 @@ const {Game} = require('./game')
 
 class Makao extends Game {
     start() {
-        let deck = setOnplays(this, this.getDeck());
-        // let deck = this.shuffle(this.getDeck().concat(this.getDeck()));
+        let deck = this.getDeck().concat(this.getDeck());
+        deck = setOnplays(this, deck);
+        deck = this.shuffle(deck);
         for(let i=0; i<this.players.length; i++) {
             this.players[i].index = i;
-            this.players[i].expectedToMove = false;
+            this.players[i].expectedToMove = true;
             this.players[i].saidMakao = false;
             this.players[i].cards = [];
             for (let j=0; j<5; j++) {
@@ -14,22 +15,23 @@ class Makao extends Game {
             }
         }
         this.stack = [];
-        this.stack.push(deck[0]); // this.stack.push(deck.pop());
+        // this.stack.push(deck[0]);
+        this.stack.push(deck.pop());
         this.restOfCards = deck;
         this.lastMove = {player: null, action: "none"};
-        this.players[0].expectedToMove = true;
         this.special = {name: "none", value: null}; // !!! przedyskutować !!!
         this.toChoose = null;
         this.choosingPlayer = null;
 
         //debug start
-        // this.players[0].cards.unshift(deck[1])
+        // this.players[0].cards.unshift(deck[3])
         // this.action(this.players[0], 'play-card', 0);
-        // this.action(this.players[0], 'draw-card', 0);
-        // this.action(this.players[1], 'draw-card', 0);
-        // this.players[1].cards.unshift(deck[13]);
+        // this.players[1].cards.unshift(deck[0])
         // this.action(this.players[1], 'play-card', 0);
-        // this.action(this.players[0], 'choose', 0);
+        // this.players[1].cards.unshift(deck[16])
+        // this.action(this.players[1], 'play-card', 0);
+        // this.action(this.players[1], 'draw-card', 0);
+        // this.action(this.players[2], 'draw-card', 0);
 
         let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
         //debug stop
@@ -67,8 +69,10 @@ class Makao extends Game {
                             if (this.special.value == card.suit) canPlay = true;
                         break;
                         case "demand":
-                            let v = this.special.value;
-                            if (v == card.symbol || v == 'J') canPlay = true;
+                            if (card.symbol == this.special.value || card.symbol == 'J') canPlay = true;
+                        break;
+                        case "turns-to-wait":
+                            if (card.symbol == '4') canPlay = true;
                         break;
                         default:
                             if (sameSuits || sameSymbols) canPlay = true;
@@ -84,17 +88,26 @@ class Makao extends Game {
                     for (let p of this.players) p.expectedToMove = false;
                     this.players[(player.index+1) % this.players.length].expectedToMove = true;
 
-                    this.special = {name: "none", value: null}; //??
+                    if (this.special.name == "suit-change" || this.special.name == "demand") {
+                        this.special = {name: "none", value: null};
+                    }
                     card.onPlay?.(this);
 
-                    console.log(`${player.login} played ${card.name}`)
+                    console.log(`${player.login} played ${card.name}`);
                     return true;
                 } else {
-                    console.log(`${player.login} can't play ${card.name}`)
+                    console.log(`${player.login} can't play ${card.name}`);
                 }
             break;
                 
             case "draw-card":
+                if (this.special.name == "turns-to-wait" && player.expectedToMove) {
+                    player.turnsToWait = this.special.value;
+                    console.log(`${player.login} must wait ${player.turnsToWait} turns`);
+                    this.special = {name: "none", value: null};
+                    return true;
+                }
+
                 let playerDrawed = this.lastMove.player == player && this.lastMove.action == action;
                 if (player.expectedToMove && !playerDrawed) {
                     let card = this.restOfCards.pop();
@@ -106,10 +119,10 @@ class Makao extends Game {
                     player.expectedToMove = true;
                     this.players[(player.index+1) % this.players.length].expectedToMove = true;
 
-                    console.log(`${player.login} drawed ${card.name}`)
+                    console.log(`${player.login} drawed ${card.name}`);
                     return true;
                 } else {
-                    console.log(`${player.login} can't draw card`)
+                    console.log(`${player.login} can't draw card`);
                 }
             break;
 
@@ -192,6 +205,16 @@ function setOnplays(game, deck) {
                 card.onPlay = (game) => {
                     game.choosingPlayer = game.lastMove.player;
                     game.toChoose = symbols;
+                }
+            break;
+            case '4':
+                card.onPlay = (game) => {
+                    if (game.special.name == "turns-to-wait") {
+                        game.special.value ++;
+                    } else {
+                        game.special.name = "turns-to-wait";
+                        game.special.value = 1;
+                    }
                 }
             break;
         }

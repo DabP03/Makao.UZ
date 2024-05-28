@@ -49,6 +49,7 @@ function addUser(socket, user) {
     function joinGame(id) {
 
         game = getGame(id);
+        player = game.getPlayer(user);
         if (game) {
             game.addPlayer(user);
             removeUser();
@@ -67,15 +68,14 @@ function addUser(socket, user) {
             function startGame() {
                 if (game.canStart()) {
                     game.start();
-                    player = game.getPlayer(user);
-                    io.to(game.id).emit('game-start', game.getState(player));
-                    io.to(game.id).emit('game-start', game.getState(player));
+                    game.sendState(io, 'game-start');
+                    game.sendState(io, 'game-start');
                     console.log("Game " + game.id + " started");
                     socket.on("game-action", performGameAction);
         
                     function performGameAction(action, arg) {
                         if (game.action(player, action, arg)) {
-                            io.to(game.id).emit('game-update', game.getState(player));
+                            game.sendState(io, 'game-update');
                         }
                     }
                 }

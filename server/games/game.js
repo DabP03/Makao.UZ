@@ -25,7 +25,7 @@ class Game {
     }
     getPlayer(user) {
         for (let p of this.players) {
-            if (p.socket = user.socket) return p;
+            if (p.socket == user.socket) return p;
         }
         return null;
     }
@@ -34,6 +34,12 @@ class Game {
         return (n >= this.minPlayers && n <= this.maxPlayers);
     }
     getState(player) {}
+    sendState(io, event) {
+        for (let p of this.players) {
+            io.to(p.socket).emit(event, this.getState(p));
+            console.log(`sended ${event} to ${p.login} ${p.socket}`)
+        }
+    }
     start() {}
     action() {}
 };
