@@ -1,6 +1,7 @@
 class Game {
     constructor() {
         this.id = getId();
+        this.started = false;
         this.table = {};
         this.players = [];
         this.getDeck = getPockerDeck;
@@ -37,7 +38,6 @@ class Game {
     sendState(io, event) {
         for (let p of this.players) {
             io.to(p.socket).emit(event, this.getState(p));
-            console.log(`sended ${event} to ${p.login} ${p.socket}`)
         }
     }
     start() {}

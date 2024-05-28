@@ -2,6 +2,10 @@ const {Game} = require('./game')
 
 class Makao extends Game {
     start() {
+        if (this.started) {
+            console.log(`game ${this.id} already started`);
+            return false;
+        }
         let deck = this.getDeck().concat(this.getDeck());
         deck = setOnplays(this, deck);
         deck = this.shuffle(deck);
@@ -22,6 +26,7 @@ class Makao extends Game {
         this.special = {name: "none", value: null}; // !!! przedyskutować !!!
         this.toChoose = null;
         this.choosingPlayer = null;
+        this.started = true;
 
         //debug start
         // this.players[0].cards.unshift(deck[3])
@@ -35,9 +40,15 @@ class Makao extends Game {
 
         let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
         //debug stop
+        return true;
     }
 
     action(player, action, arg) {
+        if (!this.started) {
+            console.log(`can't perform action, game ${this.id} is't started yet`);
+            return false;
+        }
+
         if (this.toChoose && ((action != 'choose') || (player != this.choosingPlayer))) {
             console.log(`Player ${this.choosingPlayer.login} must choose`);
             return false;
