@@ -130,7 +130,7 @@ class Makao extends Game {
                     player.expectedToMove = true;
                     this.players[(player.index+1) % this.players.length].expectedToMove = true;
 
-                    console.log(`${player.login} drawed ${card.name}`);
+                    console.log(`${player.login} drew ${card.name}`);
                     return true;
                 } else {
                     console.log(`${player.login} can't draw card`);
@@ -171,7 +171,7 @@ class Makao extends Game {
                         let card = this.restOfCards.pop();
                         reportedPlayer.cards.push(card);
                     }
-                    console.log(`${player.login} reported ${reportedPlayer.login} and he reived 5 cards`);
+                    console.log(`${player.login} reported ${reportedPlayer.login} and reived 5 cards`);
                 }
             break;
             
