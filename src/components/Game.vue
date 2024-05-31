@@ -12,18 +12,16 @@
   let special = ref(0);
   let toChoose = ref(0);
   let showDemandMenu = ref(false);
-  let colors = ["clubs", "diamonds", "hearts", "spades"];
-  let figures = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
 	}
 
-  function drawCard() { // TODO
+  function drawCard() {
     socket.emit("game-action", "draw-card");
   }
 
-  function demand(item) { // TODO
+  function demand(item) {
     socket.emit("game-action", "choose", item);
     showDemandMenu.value = false; 
   }
@@ -54,7 +52,7 @@
 
 <template>
 	<div class="game">
-		<div class="muted-red"> Playing as: {{ username }} </div>
+		<div class="info"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
         {{ player.login }}
@@ -63,8 +61,8 @@
       </div>
 		</div>
 
-    <div id="card-effects" class="muted-red">
-      <div v-if="special.value != null"> {{ special.name }} {{ special.value }} </div> 
+    <div class="info" v-if="special.value != null"> 
+      {{ special.name }}: {{ special.value }} 
     </div>
 
 		<div class="table" v-if="!showDemandMenu">
@@ -112,6 +110,11 @@
 		display: flex;
 		flex-direction: column;
 	}
+
+  .info {
+    background-color: #181818;
+    color: #f56666;
+  }
 
 	.player-list {
 		background-color: #181818;
