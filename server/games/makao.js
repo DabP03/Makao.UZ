@@ -109,6 +109,7 @@ class Makao extends Game {
                 }
 
                 if (canPlay) {
+                    this.stayTurnOfPlayerBefore(player.index);
                     player.cards.splice(arg, 1);
                     this.stack.push(card);
                     player.saidMakao = false;
@@ -132,8 +133,8 @@ class Makao extends Game {
             case "draw-card":
                 if (this.special.name == "turns-to-wait" && player.expectedToMove) {
                     player.turnsToWait = this.special.value;
-                    this.special = {name: "none", value: null};
                     this.stayTurnOfPlayerBefore(player.index);
+                    this.special = {name: "none", value: null};
                     console.log(`${player.login} must wait ${player.turnsToWait} turns`);
                     this.expectNextPlayer(player.index);
                     return true;
@@ -141,11 +142,11 @@ class Makao extends Game {
 
                 let playerDrawed = this.lastMove.player == player && this.lastMove.action == action;
                 if (player.expectedToMove && !playerDrawed) {
+                    this.stayTurnOfPlayerBefore(player.index);
                     let card = this.restOfCards.pop();
                     player.cards.push(card);
                     player.saidMakao = false;
                     this.lastMove = {player: player, action: action};
-                    this.stayTurnOfPlayerBefore(player.index);
 
                     console.log(`${player.login} drew ${card.name}`);
 
