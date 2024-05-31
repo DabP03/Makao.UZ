@@ -11,8 +11,6 @@ a,
 .muted-red {
 	text-decoration: none;
 	color: #f56666;
-	background-color: #181818;
-	transition: 0.4s;
 	padding: 3px;
 }
 
