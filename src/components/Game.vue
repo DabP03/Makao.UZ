@@ -17,17 +17,14 @@
 
 	function playCard(cardName, index) {
 		socket.emit("game-action", "play-card", index);
-		// cardHand.value.splice(index, 1); // remove the card from hand; TODO make card removal server-side?
-		// console.log("Card played:", cardName.name, index);
 	}
 
   function drawCard() { // TODO
     socket.emit("game-action", "draw-card");
-    //console.log(props.username, "drew a card.");
   }
 
   function demand(item) { // TODO
-    console.log(props.username, "demands:", item)
+    socket.emit("game-action", "choose", item);
     showDemandMenu.value = false; 
   }
 
@@ -66,8 +63,8 @@
       </div>
 		</div>
 
-    <div class="card-effects">
-      <div v-if="special.value != null"> Special: {{ special.value.name }} </div> 
+    <div id="card-effects" class="muted-red">
+      <div v-if="special.value != null"> {{ special.name }} {{ special.value }} </div> 
     </div>
 
 		<div class="table" v-if="!showDemandMenu">
@@ -85,8 +82,9 @@
     <div class="demand" v-if="showDemandMenu">
       <button
         type="button"
-        v-for="option in toChoose"
-        @click="demand(option)">
+        class="card"
+        v-for="(option, index) in toChoose"
+        @click="demand(index)">
           {{ option }}
       </button>
     </div>
@@ -103,21 +101,20 @@
 		<div class="hud">
 			<button type="button" @click="Makao()"> MAKAO </button>
 			<button type="button" @click="$emit('close')"> Exit </button>
-			<button type="button" @click="showDemandMenu = true"> [dev] Show demand menu </button>
 		</div>
 	</div>
 </template>
 
 <style scoped> /* TODO rethink divs height when they're filled with content */
 	.game {
-		background-color: #222222;
+		background-color: #181818;
   	text-align: center; /* always centered, no matter the screen size */
 		display: flex;
 		flex-direction: column;
 	}
 
 	.player-list {
-		background-color: blue;
+		background-color: #181818;
 		height: 20%;
 		display: flex;
 		justify-content: center;
@@ -134,19 +131,19 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #222222;
+		background-color: #181818;
 		height: 100%;
 	}
 
 	.card-pile {
 		width: 63px; /* 88x63 mm - size of Piatnik poker cards */
 		height: 88px;
-		background-color: #222222;
+		background-color: #181818;
 		margin: 8px;
 	}
 
 	.card-hand {
-		background-color: #222222;
+		background-color: #181818;
 		height: 40%;
 		display: flex;
     justify-content: center;
@@ -158,6 +155,8 @@
     width: 63px;
 		height: 88px;
     margin: 8px;
+    font-size: 28px;
+    font-weight: bold;
   }
 
   .card-deck:hover,
@@ -173,7 +172,7 @@
   }
 
 	.hud {
-		background-color: #222222;
+		background-color: #181818;
 		height: 15%;
 		display: flex;
 		justify-content: center; /* Centers content width-wise */
