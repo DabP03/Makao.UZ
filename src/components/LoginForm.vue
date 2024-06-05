@@ -9,11 +9,12 @@
 		console.log('Login submitted', login, password);
 		socket.emit('login-submit', login, password); // emit to server/main.js
 		socket.on('login-submit-answer', (result) => {
-			if (result) {
+			if (result.bool) {
 				emit('open-lobby', login); // emit to App.vue; TODO lobby opens only if login is valid
+                console.log(result.message);
 				emit('close');
 			} else {
-				console.log('Can not login')
+				console.log(result.message);
 			}
 		});
 	}

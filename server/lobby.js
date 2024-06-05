@@ -116,7 +116,18 @@ function getGame(id) {
     return game;
 }
 
+function isInLobby(login) {
+    let ret = false;
+    users.forEach((user) => {
+        if (user.login == login) {
+            ret = true;
+        }
+    });
+    return ret;
+}
+
 module.exports = {
     setIo: setIo,
     addUser: addUser,
+    isInLobby: isInLobby,
 }

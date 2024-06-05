@@ -25,20 +25,35 @@ function main(io) {
         }
 
         async function loginSubmit(login, password) {
-            if (debugAccounts.isDebug(login, password)) {
+            if (lobby.isInLobby(login)) {
+                socket.emit("login-submit-answer", {
+                    bool: false,
+                    message: "User already logged in.",
+                });
+            }
+            else if (debugAccounts.isDebug(login, password)) {
                 console.log("debug");
-                socket.emit('login-submit-answer', true);
+                socket.emit('login-submit-answer', {
+                    bool: true,
+                    message: "DebugAccount",
+                });
                 console.log(`Logged: ${login} | ${password}`);
                 lobby.addUser(socket, new User(socket.id, login))
             } else {
                 const hashedPassword = hashPassword(password);
                 const result = await mongo.logInPlayer(login, hashedPassword);
                 if (result != false) {
-                    socket.emit('login-submit-answer', true);
+                    socket.emit('login-submit-answer', {
+                        bool: true,
+                        message: "Login successfull."
+                    });
                     console.log(`Logged: ${login} | ${hashedPassword}`);
                     lobby.addUser(socket, new User(socket, result))
                 } else {
-                    socket.emit('login-submit-answer', false);
+                    socket.emit('login-submit-answer', {
+                        bool: false,
+                        message: "Login and password don't match.",
+                    });
                 }
             }
         }
