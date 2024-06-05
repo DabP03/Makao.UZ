@@ -61,13 +61,16 @@ function main(io) {
         async function registerSubmit(login, password) {
             if (debugAccounts.isDebug(login, password)) {
                 console.log("debug");
-                socket.emit('register-submit-answer', true);
+                socket.emit('register-submit-answer', {
+                    bool: true,
+                    message: "DebugAccount",
+                });
                 console.log(`Registered: ${login} | ${password}`);
             } else {
                 const hashedPassword = hashPassword(password);
                 const result = await mongo.signInPlayer(login, hashedPassword);
                 socket.emit('register-submit-answer', result);
-                if (result) {
+                if (result.bool) {
                     console.log(`Registered: ${login} | ${password}`);
                 }
             }

@@ -10,7 +10,13 @@
 		if(password == confirm_password) {
 			console.log("Register submitted", login, password);
 			socket.emit('register-submit', login, password);
-			emit('close');
+			if (result.bool) {
+                console.log(result.message);
+				emit('close');
+			} else {
+				console.log(result.message);
+			}
+		});
 		} else {
 			console.log("Passwords don't match");
 		}

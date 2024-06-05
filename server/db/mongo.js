@@ -59,9 +59,15 @@ class Mongo {
                     password: `${password}`
                 });
                 await this.db.collection("userData").insertOne(new UserData(login));
-                return true;
+                return {
+                    bool: true,
+                    message: "Registration successfull.",
+                };
             } else {
-                return false;
+                return {
+                    bool: false,
+                    message: "User already exists."
+                };
             }
         } catch (error) {
             console.error(error);
