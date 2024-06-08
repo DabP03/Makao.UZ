@@ -7,20 +7,19 @@
 	var confirm_password = "";
 	
 	function registerSubmit() {
-		if(password == confirm_password) {
-			console.log("Register submitted", login, password);
-			socket.emit('register-submit', login, password);
-			if (result.bool) {
+        if(password == confirm_password) {
+            console.log("Register submitted", login, password);
+            socket.emit('register-submit', login, password);
+            if (result) {
                 console.log(result.message);
-				emit('close');
-			} else {
-				console.log(result.message);
-			}
-		});
-		} else {
-			console.log("Passwords don't match");
-		}
-	}
+                emit('close');
+            } else {
+                console.log(result.message);
+            }
+        } else {
+            console.log("Passwords don't match");
+        }
+    }
 </script>
 
 <template>

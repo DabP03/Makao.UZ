@@ -66,7 +66,7 @@ class Mongo {
             } else {
                 return {
                     bool: false,
-                    message: "User already exists."
+                    message: "User already exists.",
                 };
             }
         } catch (error) {
