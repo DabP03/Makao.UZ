@@ -55,14 +55,23 @@
 		<div class="info"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
-        {{ player.login }}
+        <p :style="{'font-weight': player.finished ? 'bold' : 'normal'}"> {{ player.login }} </p>
         <br> 
-        {{ player.cardsQuantity }}
+        <p v-if="player.finished == false"> {{ player.cardsQuantity }} </p>
+        <p v-else-if="player.finished == true"> Finished! </p>
+        <br>
+        <p v-if="player.turnsToWait != 0"> Waiting: {{ player.turnsToWait }} </p>
+        <br>
+        <p v-if="player.expectedToMove == true"> ^ </p>
       </div>
 		</div>
 
     <div class="info" v-if="special.value != null"> 
-      {{ special.name }}: {{ special.value }} 
+      <p v-if="special.name == 'demand'"> Demand: </p>
+      <p v-if="special.name == 'suit-change'"> Suit change: </p>
+      <p v-if="special.name == 'turns-to-wait'"> Turns to wait: </p>
+      <p v-if="special.name == 'cards-to-draw'"> Cards to draw: </p>
+      {{ special.value }} 
     </div>
 
 		<div class="table" v-if="!showDemandMenu">
@@ -104,6 +113,10 @@
 </template>
 
 <style scoped> /* TODO rethink divs height when they're filled with content */
+  p {
+    height: 10px; /* TODO rethink */
+  }
+
 	.game {
 		background-color: #181818;
   	text-align: center; /* always centered, no matter the screen size */
