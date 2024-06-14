@@ -25,8 +25,8 @@
 
 		<input type="password" v-model.trim="confirm_password" placeholder="Confirm password" />
 
-		<button type="button" @click="$emit('close')"> Cancel </button>
 		<input type="submit" @click="registerSubmit()" value="Submit" />
+		<button type="button" @click="$emit('close')"> Cancel </button>
 	</div>
 </template>
 
