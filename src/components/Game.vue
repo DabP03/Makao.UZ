@@ -57,11 +57,11 @@
 
 <template>
 	<div class="game">
-		<div class="info"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
         <p class="player-name" :style="{
-          'font-weight': player.finished ? 'bold' : 'normal'
+          'font-weight': player.finished ? 'bold' : 'normal',
+          'color': (player.login == username) ? '#f56666' : 'inherit'
           }"
           @click="reportMakao(player.login)"> {{ player.login }} </p>
         <br> 
