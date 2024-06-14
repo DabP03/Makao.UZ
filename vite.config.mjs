@@ -13,12 +13,15 @@ import vue from '@vitejs/plugin-vue'
                 '@': fileURLToPath(new URL('./src', import.meta.url))
             },
         },
-        // server: {
-        //     port: 3000,
-        //     hmr: {
-        //         protocol: 'ws',
-        //         host: 'localhost',
-        //     },
-        // },
-
+        server: {
+            host: '0.0.0.0',
+            port: '5713',
+            proxy: {
+                '/socket.io': {
+                    target: 'http://localhost:3000',
+                    ws: true,
+                    // changeOrigin: true,
+                },
+            },
+        },
     });
