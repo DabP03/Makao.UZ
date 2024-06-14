@@ -4,5 +4,6 @@
    "port": 3000,
    "mongoUri": "mongodb://localhost:27017",
    "createCollections": false, 
-   "serverIP": "http://192.168.0.157:3000"
+   "ip": "http://192.168.0.157:3000",
+   "ipLocal": "http://localhost:3000"
 }
