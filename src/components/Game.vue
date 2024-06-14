@@ -30,6 +30,11 @@
     socket.emit("game-action", "say-makao");
   }
 
+  function reportMakao(player) {
+    let id = playerList.value.findIndex(x => x.login === player);
+    socket.emit("game-action", "report-makao", id);
+  }
+
   socket.on('game-start', (gameState) => { // TODO delete?
     playerList.value = Array.from(gameState.others);
     cardHand.value = Array.from(gameState.cards);
@@ -55,7 +60,10 @@
 		<div class="info"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
-        <p :style="{'font-weight': player.finished ? 'bold' : 'normal'}"> {{ player.login }} </p>
+        <p class="player-name" :style="{
+          'font-weight': player.finished ? 'bold' : 'normal'
+          }"
+          @click="reportMakao(player.login)"> {{ player.login }} </p>
         <br> 
         <p v-if="player.finished == false"> {{ player.cardsQuantity }} </p>
         <p v-else-if="player.finished == true"> Finished! </p>
@@ -142,6 +150,15 @@
 		padding-right: 8px;
 	}
 
+  .player-name:hover {
+    color: white;
+    cursor: pointer;
+  }
+
+  .player-name:active {
+    scale: 90%;
+  }
+
   .demand,
 	.table {
 		display: flex;
@@ -180,11 +197,13 @@
     position: relative;
     right: 5px;
     bottom: 5px;
+    cursor: grab;
   }
 
   .card-deck:active,
   .card:active {
     scale: 90%;
+    cursor: grabbing;
   }
 
 	.hud {
