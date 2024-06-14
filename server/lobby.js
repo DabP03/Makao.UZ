@@ -15,6 +15,9 @@ games.push(new Makao());
 // g.addPlayer({login:"typ1"})
 // g.addPlayer({login:"typ2"})
 // g.addPlayer({login:"typ3"})
+// g.addPlayer({login:"typ4"})
+// g.addPlayer({login:"typ5"})
+// g.addPlayer({login:"typ6"})
 // if(g.canStart()) g.start()
 
 // tmp stop
@@ -82,7 +85,7 @@ function addUser(socket, user) {
             }
 
         } else {
-            console.log(`Not game with id ${id}`);
+            console.log(`No game with id ${id}`);
             socket.emit('game-join-answer', false);
         }
 
