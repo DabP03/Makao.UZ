@@ -34,7 +34,7 @@
     emit('close');
   }
 
-	function exitGame() {
+	function gameClosed() {
 		gameOpen.value = false;
 	}
 </script>
@@ -53,7 +53,7 @@
   <div class="game" v-if="gameOpen">
 		<Game
 			:username=username
-			@close="exitGame()"/>
+			@close="gameClosed()"/>
 	</div>
 </template>
 

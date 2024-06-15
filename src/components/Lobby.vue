@@ -1,10 +1,9 @@
 <script setup>
 	import { socket } from "@/socket";
 	import { ref } from "vue";
-	import Game from "./Game.vue";
   import Room from "./Room.vue";
 
-	const emit = defineEmits(['close', 'game-start', 'logo-hide', 'logo-show']);
+	const emit = defineEmits(['close', 'logo-hide', 'logo-show']);
 	const props = defineProps({
 		username: { type: String }
 	});
@@ -41,7 +40,7 @@
     });
   }
 
-  function exitRoom() {
+  function roomClosed() {
     roomOpen.value = false;
     emit('logo-show');
   }
@@ -59,8 +58,8 @@
 
     <div class="list">
       <p class="muted-red"> Open game rooms: </p>
-      <li v-for="room in roomList"> <!-- TODO unique ids for rooms -->
-        <button type="button" @click="enterRoom(room)"> {{ room.name }} </button>
+      <li v-for="(room, index) in roomList">
+        <button type="button" id=index @click="enterRoom(room)"> {{ room.name }} </button>
       </li>
     </div>
 
@@ -69,7 +68,7 @@
   <div class="room" v-if="roomOpen">
     <Room
       :username=username
-      @close="exitRoom()"/>
+      @close="roomClosed()"/>
   </div>
 </template>
 
