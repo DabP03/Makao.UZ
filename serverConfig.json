@@ -1,9 +1,7 @@
 {
-   "cors": "http://locahost:3001",
-   "corsAll": "*",
+   "cors": "*",
    "port": 3000,
    "mongoUri": "mongodb://localhost:27017",
    "createCollections": false, 
-   "ip": "http://192.168.0.157:3000",
-   "ipLocal": "http://localhost:3000"
+   "ip": "http://localhost:3000"
 }
