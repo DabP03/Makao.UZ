@@ -13,7 +13,6 @@
  	let gameOpen = ref(false);
 	let gamestate = ref(null);
 
-//  TODO only show players in that particular game room, not in entire lobby
   socket.on('game-room-update', (players) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
 		players.forEach(player => playerList.value.push(player.login)); // rewrite array
@@ -30,6 +29,11 @@
 		emit('game-start');
 	}
 
+  function leaveRoom() {
+    socket.emit('leave-room');
+    emit('close');
+  }
+
 	function exitGame() {
 		gameOpen.value = false;
 	}
@@ -44,7 +48,7 @@
 		</div>
 
 		<button type="button" @click="startGame()"> Start game </button>
-    <button type="button" @click="$emit('close')"> Exit to lobby </button>
+    <button type="button" @click="leaveRoom()"> Leave room </button>
   </div>
   <div class="game" v-if="gameOpen">
 		<Game
