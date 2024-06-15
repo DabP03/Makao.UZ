@@ -1,19 +1,18 @@
 <script setup>
 	import { socket } from "@/socket";
 	import { ref } from "vue";
-	import Game from "./Game.vue";
   import Room from "./Room.vue";
 
-	const emit = defineEmits(['close', 'game-start', 'logo-hide', 'logo-show']);
+	const emit = defineEmits(['close', 'logo-hide', 'logo-show']);
 	const props = defineProps({
 		username: { type: String }
 	});
 
-	let playerList = ref([]);
-  	let roomList = ref([]);
+  let playerList = ref([]);
+  let roomList = ref([]);
 	let val = ref(0); // thanks to this value, the player list appears; TODO maybe a cleaner solution
 	let gameOpen = ref(false);
-  	let roomOpen = ref(false);
+  let roomOpen = ref(false);
 
 	socket.on('lobby-update', (players, rooms) => { // update-players emit from server/lobby.js
 		playerList.value.length = 0; // clear array to avoid duplicate usernames
@@ -22,40 +21,29 @@
 		roomList = rooms;
 	});
 
-	function exitLobby() {
-		socket.emit('lobby-exit'); // player-left emit to server/lobby.js
-		emit('close');
+	function leaveLobby() {
+		socket.emit('leave-lobby');
+		emit('close'); // TODO close only if emit is received properly
 	}
 
   function enterRoom(room) {
-	socket.emit('game-join', room.id);
-	console.log(`Trying to enter room ${room.name} with id ${room.id}`);
-	socket.on('game-join-answer', (ans) => {
-		if (ans) {
-			console.log(`Entered room`);
-			roomOpen.value = true;
-			emit('logo-hide');
-		} else {
-			console.log("Cannot enter room")
-		}
-	});
+    socket.emit('game-join', room.id);
+    console.log(`Trying to enter room ${room.name} with id ${room.id}`);
+    socket.on('game-join-answer', (ans) => {
+      if (ans) {
+        console.log(`Entered room`);
+        roomOpen.value = true;
+        emit('logo-hide');
+      } else {
+        console.log("Cannot enter room")
+      }
+    });
   }
 
-  function exitRoom() {
+  function roomClosed() {
     roomOpen.value = false;
     emit('logo-show');
   }
-
-	function startGame() {
-		socket.emit('game-start');
-		gameOpen.value = true;
-		emit('logo-hide');
-	}
-
-	function exitGame() {
-		gameOpen.value = false;
-		emit('logo-show');
-	}
 </script>
 
 <template>
@@ -70,24 +58,17 @@
 
     <div class="list">
       <p class="muted-red"> Open game rooms: </p>
-      <li v-for="room in roomList"> <!-- TODO unique ids for rooms -->
-        <button type="button" @click="enterRoom(room)"> {{ room.name }} </button>
+      <li v-for="(room, index) in roomList">
+        <button type="button" id=index @click="enterRoom(room)"> {{ room.name }} </button>
       </li>
     </div>
 
-		<!-- <button type="button" @click="startGame()"> Start game </button>
-		<button type="button" @click="exitLobby()"> Log out </button> -->
-	</div>
-	<div class="game" v-if="gameOpen">
-		<Game
-			:username=username
-      :playerList=playerList
-			@close="exitGame()"/>
+		<button type="button" @click="leaveLobby()"> Leave lobby </button>
 	</div>
   <div class="room" v-if="roomOpen">
     <Room
       :username=username
-      @close="exitRoom()"/>
+      @close="roomClosed()"/>
   </div>
 </template>
 
