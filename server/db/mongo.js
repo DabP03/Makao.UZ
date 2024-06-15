@@ -25,12 +25,11 @@ class Mongo {
         }
     }
 
-    async logInPlayer(login, password) { // zwraca userData jak logowanie się powiodło, false jak nie
+    async getUserData(login) {
         try {
             await this.client.connect();
             const result = await this.db.collection("users").findOne({
-                login: `${login}`,
-                password: `${password}`
+                login: `${login}`
             });
             console.log(result);
             if (result != null) {
@@ -47,13 +46,33 @@ class Mongo {
         }
     }
 
+    async logInPlayer(login) { // zwraca userData jak logowanie się powiodło, false jak nie
+        try {
+            await this.client.connect();
+            console.log(login);
+            const result = await this.db.collection("users").findOne({
+                login: `${login}`
+            });
+            console.log(result);
+            if (result != null) {
+                return result.password;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            await this.client.close();
+        }
+    }
+
     async signInPlayer(login, password) { // tak samo jak wyżej tylko że true i false
         try {
             await this.client.connect();
             const result = await this.db.collection("users").findOne({
                 login: `${login}`
             });
-            if (result != null) {
+            if (result == null) {
                 await this.db.collection("users").insertOne({
                     login: `${login}`,
                     password: `${password}`

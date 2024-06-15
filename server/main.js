@@ -13,15 +13,16 @@ function main(io) {
 
     io.on('connection', (socket) => {
 
-        function hashPassword(password) {
+        async function hashPassword(password) {
             const saltRounds = 10;
-            const hashedPassword = bcrypt // hashowenie hasla
-                .genSalt(saltRounds)
-                .then(salt => {
-                    return bcrypt.hash(password, salt)
-                })
-                .catch(err => console.error(err.message));
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
             return hashedPassword;
+        }
+
+        async function checkPassword(password, hashedPassword) {
+            const match = await bcrypt.compare(password, hashedPassword);
+            console.log(match ? 'Passwords match' : 'Passwords do not match');
+            return match;
         }
 
         async function loginSubmit(login, password) {
@@ -40,15 +41,14 @@ function main(io) {
                 console.log(`Logged: ${login} | ${password}`);
                 lobby.addUser(socket, new User(socket.id, login))
             } else {
-                const hashedPassword = hashPassword(password);
-                const result = await mongo.logInPlayer(login, hashedPassword);
-                if (result != false) {
+                const result = await mongo.logInPlayer(login);
+                if (result != false && checkPassword(password, result)) {
                     socket.emit('login-submit-answer', {
                         bool: true,
                         message: "Login successfull."
                     });
-                    console.log(`Logged: ${login} | ${hashedPassword}`);
-                    lobby.addUser(socket, new User(socket, result))
+                    console.log(`Logged: ${login} | ${password}`);
+                    lobby.addUser(socket, new User(socket.id, await mongo.getUserData(login)))
                 } else {
                     socket.emit('login-submit-answer', {
                         bool: false,
@@ -59,6 +59,7 @@ function main(io) {
         }
 
         async function registerSubmit(login, password) {
+            console.log("register function");
             if (debugAccounts.isDebug(login, password)) {
                 console.log("debug");
                 socket.emit('register-submit-answer', {
@@ -67,7 +68,8 @@ function main(io) {
                 });
                 console.log(`Registered: ${login} | ${password}`);
             } else {
-                const hashedPassword = hashPassword(password);
+                const hashedPassword = await hashPassword(password);
+                // const hashedPassword = password;
                 const result = await mongo.signInPlayer(login, hashedPassword);
                 socket.emit('register-submit-answer', result);
                 if (result.bool) {
