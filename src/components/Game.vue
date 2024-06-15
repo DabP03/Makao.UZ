@@ -30,6 +30,11 @@
     socket.emit("game-action", "say-makao");
   }
 
+  function reportMakao(player) {
+    let id = playerList.value.findIndex(x => x.login === player);
+    socket.emit("game-action", "report-makao", id);
+  }
+
   socket.on('game-start', (gameState) => { // TODO delete?
     playerList.value = Array.from(gameState.others);
     cardHand.value = Array.from(gameState.cards);
@@ -52,17 +57,29 @@
 
 <template>
 	<div class="game">
-		<div class="info"> Playing as: {{ username }} </div>
 		<div class="player-list"> 
 			<div class="player-info" v-for="player in playerList"> 
-        {{ player.login }}
+        <p class="player-name" :style="{
+          'font-weight': player.finished ? 'bold' : 'normal',
+          'color': (player.login == username) ? '#f56666' : 'inherit'
+          }"
+          @click="reportMakao(player.login)"> {{ player.login }} </p>
         <br> 
-        {{ player.cardsQuantity }}
+        <p v-if="player.finished == false"> {{ player.cardsQuantity }} </p>
+        <p v-else-if="player.finished == true"> Finished! </p>
+        <br>
+        <p v-if="player.turnsToWait != 0"> Waiting: {{ player.turnsToWait }} </p>
+        <br>
+        <p v-if="player.expectedToMove == true"> ^ </p>
       </div>
 		</div>
 
     <div class="info" v-if="special.value != null"> 
-      {{ special.name }}: {{ special.value }} 
+      <p v-if="special.name == 'demand'"> Demand: </p>
+      <p v-if="special.name == 'suit-change'"> Suit change: </p>
+      <p v-if="special.name == 'turns-to-wait'"> Turns to wait: </p>
+      <p v-if="special.name == 'cards-to-draw'"> Cards to draw: </p>
+      {{ special.value }} 
     </div>
 
 		<div class="table" v-if="!showDemandMenu">
@@ -104,6 +121,10 @@
 </template>
 
 <style scoped> /* TODO rethink divs height when they're filled with content */
+  p {
+    height: 10px; /* TODO rethink */
+  }
+
 	.game {
 		background-color: #181818;
   	text-align: center; /* always centered, no matter the screen size */
@@ -128,6 +149,15 @@
 		padding-left: 8px;
 		padding-right: 8px;
 	}
+
+  .player-name:hover {
+    color: white;
+    cursor: pointer;
+  }
+
+  .player-name:active {
+    scale: 90%;
+  }
 
   .demand,
 	.table {
@@ -167,11 +197,13 @@
     position: relative;
     right: 5px;
     bottom: 5px;
+    cursor: grab;
   }
 
   .card-deck:active,
   .card:active {
     scale: 90%;
+    cursor: grabbing;
   }
 
 	.hud {
