@@ -30,9 +30,8 @@
     socket.emit("game-action", "say-makao");
   }
 
-  function reportMakao(player) {
-    let id = playerList.value.findIndex(x => x.login === player);
-    socket.emit("game-action", "report-makao", id);
+  function reportMakao(index) {
+    socket.emit("game-action", "report-makao", index);
   }
 
   socket.on('game-start', (gameState) => { // TODO delete?
@@ -58,19 +57,18 @@
 <template>
 	<div class="game">
 		<div class="player-list"> 
-			<div class="player-info" v-for="player in playerList"> 
-        <p class="player-name" :style="{
-          'font-weight': player.finished ? 'bold' : 'normal',
-          'color': (player.login == username) ? '#f56666' : 'inherit'
-          }"
-          @click="reportMakao(player.login)"> {{ player.login }} </p>
+			<div class="player-info" v-for="(player, index) in playerList"> 
+        <p class="player-name" 
+           :style="{
+            'font-weight': player.expectedToMove ? 'bold' : 'normal',
+            'color': (player.login == username) ? '#f56666' : 'inherit'
+           }"
+           @click="reportMakao(index)"> {{ player.login }} </p>
         <br> 
         <p v-if="player.finished == false"> {{ player.cardsQuantity }} </p>
         <p v-else-if="player.finished == true"> Finished! </p>
         <br>
         <p v-if="player.turnsToWait != 0"> Waiting: {{ player.turnsToWait }} </p>
-        <br>
-        <p v-if="player.expectedToMove == true"> ^ </p>
       </div>
 		</div>
 
