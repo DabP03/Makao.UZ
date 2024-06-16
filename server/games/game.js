@@ -20,8 +20,13 @@ class Game {
         return shuffled;
     }
     addPlayer(user) {
-        this.players.push(user);
-        user.index = this.players.length-1;
+        if (!this.started) {
+            this.players.push(user);
+            user.index = this.players.length-1;
+            return true;
+        } else {
+            return false;
+        }
     }
     removePlayer(user) {
         this.players.splice(this.players.indexOf(user), 1);
