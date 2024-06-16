@@ -120,7 +120,7 @@
 
 <style scoped> /* TODO rethink divs height when they're filled with content */
   p {
-    height: 10px; /* TODO rethink */
+    height: 16px; /* TODO rethink */
   }
 
 	.game {
