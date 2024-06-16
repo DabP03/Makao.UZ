@@ -8,7 +8,7 @@ class Makao extends Game {
         }
         let deck = this.getDeck().concat(this.getDeck());
         deck = setOnplays(deck);
-        // deck = this.shuffle(deck);
+        deck = this.shuffle(deck);
         this.restOfCards = deck;
         for(let i=0; i<this.players.length; i++) {
             this.players[i].finished = false;
@@ -21,8 +21,8 @@ class Makao extends Game {
             }
         }
         this.stack = [];
-        this.stack.push(deck[0]);
-        // this.stack.push(this.drawCard());
+        // this.stack.push(deck[0]);
+        this.stack.push(this.drawCard());
         this.lastMove = {player: null, action: "none"};
         this.special = {name: "none", value: null};
         this.toChoose = null;
