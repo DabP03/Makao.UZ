@@ -22,7 +22,7 @@
 	});
 
 	function leaveLobby() {
-		socket.emit('leave-lobby');
+		socket.emit('lobby-exit');
 		emit('close'); // TODO close only if emit is received properly
 	}
 

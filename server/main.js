@@ -26,7 +26,7 @@ function main(io) {
         }
 
         async function loginSubmit(login, password) {
-            if (lobby.isInLobby(login)) {
+            if (lobby.isLoggedIn(login)) {
                 socket.emit("login-submit-answer", {
                     bool: false,
                     message: "User already logged in.",

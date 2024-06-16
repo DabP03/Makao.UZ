@@ -64,10 +64,9 @@ function addUser(socket, user) {
 
             socket.on('game-start', startGame);
             socket.on("game-action", performGameAction);
-            socket.on('disconnect', () => {
-                game.removePlayer(player);
-                io.to(game.id).emit('game-room-update', game.players);
-            });
+
+            socket.on('disconnect', leaveGame); 
+            socket.on('leave-room', leaveGame);
     
             function startGame() {
                 if (game.canStart()) {
@@ -84,17 +83,27 @@ function addUser(socket, user) {
                 }
             }
 
+
         } else {
             console.log(`No game with id ${id}`);
             socket.emit('game-join-answer', false);
         }
 
+        // function leaveGame() {
+        //     game.removePlayer(player);
+        //     io.to(game.id).emit('game-room-update', game.players);
+        //     socket.off('game-start', startGame);
+        //     socket.off("game-action", performGameAction);
+        //     users.push(user);
+        //     socket.join('lobby');
+        //     io.to('lobby').emit('lobby-update', users, getRoomList());
+        //     console.log(`Users in lobby: ${users.map(obj => obj["login"])}`);
+        //         socket.on('lobby-exit', removeUser);
+        //     socket.on('disconnect', removeUser);
+        //     socket.on('game-join', joinGame);
 
+        // }
     }
-
-    // function leaveGame() {
-
-    // }
 }
 
 function getRoomList() {
@@ -119,9 +128,9 @@ function getGame(id) {
     return game;
 }
 
-function isInLobby(login) {
+function isLoggedIn(login) {
     let ret = false;
-    users.forEach((user) => {
+    users.forEach(user => {
         if (user.login == login) {
             ret = true;
         }
@@ -132,5 +141,5 @@ function isInLobby(login) {
 module.exports = {
     setIo: setIo,
     addUser: addUser,
-    isInLobby: isInLobby,
+    isLoggedIn: isLoggedIn,
 }
