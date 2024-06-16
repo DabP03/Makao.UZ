@@ -54,6 +54,7 @@ function addUser(socket, user) {
         game = getGame(id);
         if (game) {
             game.addPlayer(user);
+            console.log(`Users in game: ${game.players.map(obj => obj["login"])}`);
             player = game.getPlayer(user);
             removeUser();
 
@@ -94,6 +95,7 @@ function addUser(socket, user) {
 
             function leaveRoom() {
                 leaveGame();
+                socket.off('leave-room', leaveRoom);
                 addUser(socket, user);
                 
             }

@@ -8,22 +8,21 @@ class Makao extends Game {
         }
         let deck = this.getDeck().concat(this.getDeck());
         deck = setOnplays(deck);
-        deck = this.shuffle(deck);
+        // deck = this.shuffle(deck);
+        this.restOfCards = deck;
         for(let i=0; i<this.players.length; i++) {
-            this.players[i].index = i;
             this.players[i].finished = false;
             this.players[i].expectedToMove = true;
             this.players[i].turnsToWait = 0;
             this.players[i].saidMakao = false;
             this.players[i].cards = [];
             for (let j=0; j<5; j++) {
-                this.players[i].cards.push(deck.pop());
+                this.players[i].cards.push(this.drawCard());
             }
         }
         this.stack = [];
-        // this.stack.push(deck[0]);
-        this.stack.push(deck.pop());
-        this.restOfCards = deck;
+        this.stack.push(deck[0]);
+        // this.stack.push(this.drawCard());
         this.lastMove = {player: null, action: "none"};
         this.special = {name: "none", value: null};
         this.toChoose = null;
@@ -36,7 +35,7 @@ class Makao extends Game {
         //     this.players[0].cards.unshift(deck[51])
         //     this.action(this.players[0], 'play-card', 0);
         // }
-        // for (let i=0; i<3; i++) {
+        // for (let i=0; i<30; i++) {
         //     this.players[0].cards.unshift(deck[12])
         //     this.action(this.players[0], 'play-card', 0);
         // }
@@ -44,7 +43,8 @@ class Makao extends Game {
         //     this.players[0].cards.unshift(deck[51])
         //     this.action(this.players[0], 'play-card', 0);
         // }
-        // // this.action(this.players[1], 'draw-card', 0);
+        // this.action(this.players[0], 'draw-card', 0);
+        // this.action(this.players[0], 'draw-card', 0);
         
         // this.players[0].cards.unshift(deck[50]);
         // this.action(this.players[0], 'play-card', 0);
@@ -62,6 +62,7 @@ class Makao extends Game {
         // console.log(`${this.players[0].login} has ${this.players[0].cards.length} cards`);
 
         let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
+        // let cs=[];for(let c of this.players[0].cards)cs.push(c.name);console.log(cs);
         for(let p of this.players)if(p.expectedToMove)console.log(`${p.login} expected to move`);
         console.log(this.special.name+' '+this.special.value);
         //debug stop
@@ -117,7 +118,7 @@ class Makao extends Game {
                             if (card.symbol == '4') canPlay = true;
                         break;
                         case "cards-to-draw":
-                            if (card.battle) canPlay = true;
+                            if (card.battle && (sameSuits || sameSymbols)) canPlay = true;
                         break;
                         default:
                             if (sameSuits || sameSymbols) canPlay = true;
@@ -181,7 +182,7 @@ class Makao extends Game {
                         this.stayTurnOfPlayerBefore(player.index);
                         let card;
                         for (let i=cardsToDraw; i>0; i--) {
-                            card = this.restOfCards.pop();
+                            card = this.drawCard();
                             player.cards.push(card);
                         }
                         player.saidMakao = false;
@@ -234,7 +235,7 @@ class Makao extends Game {
                 let reportedPlayer = this.players[arg];
                 if (!reportedPlayer?.saidMakao && reportedPlayer.cards.length == 1) {
                     for (let i=0; i<5; i++) {
-                        let card = this.restOfCards.pop();
+                        let card = this.drawCard();
                         reportedPlayer.cards.push(card);
                     }
                     console.log(`${reportedPlayer.login} was reported by ${player.login} and reived 5 cards`);
@@ -244,6 +245,14 @@ class Makao extends Game {
             
         }
         return false;
+    }
+
+    drawCard() {
+        let card = this.restOfCards.pop();
+        if (this.restOfCards.length == 0) {
+            this.restOfCards = this.shuffle(this.getDeck());
+        }
+        return card;
     }
 
     stayTurnOfPlayerBefore(currentPlayerIndex) {
@@ -320,6 +329,12 @@ class Makao extends Game {
 
     get stackTop() {
         return this.stack[this.stack.length-1];
+    }
+
+    onRemovePlayer(user) {
+        if (this.started && user.expectedToMove) {
+            this.expectNextPlayer(user.index);
+        }
     }
 }
 

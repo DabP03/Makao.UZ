@@ -20,10 +20,16 @@ class Game {
     }
     addPlayer(user) {
         this.players.push(user);
+        user.index = this.players.length-1;
     }
     removePlayer(user) {
         this.players.splice(this.players.indexOf(user), 1);
+        for (let i=0; i<this.players.length; i++) {
+            this.players[i].index = i;
+        }
+        this.onRemovePlayer(user);
     }
+    onRemovePlayer(user) {}
     getPlayer(user) {
         for (let p of this.players) {
             if (p.socket == user.socket) return p;
