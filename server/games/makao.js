@@ -31,36 +31,6 @@ class Makao extends Game {
         this.playerExpectedOnceAgain = false;
 
         //debug start
-        // for (let i=0; i<2; i++) {
-        //     this.players[0].cards.unshift(deck[51])
-        //     this.action(this.players[0], 'play-card', 0);
-        // }
-        // for (let i=0; i<30; i++) {
-        //     this.players[0].cards.unshift(deck[12])
-        //     this.action(this.players[0], 'play-card', 0);
-        // }
-        // for (let i=0; i<3; i++) {
-        //     this.players[0].cards.unshift(deck[51])
-        //     this.action(this.players[0], 'play-card', 0);
-        // }
-        // this.action(this.players[0], 'draw-card', 0);
-        // this.action(this.players[0], 'draw-card', 0);
-        
-        // this.players[0].cards.unshift(deck[50]);
-        // this.action(this.players[0], 'play-card', 0);
-        // this.players[1].cards.unshift(deck[3]);
-        // this.action(this.players[1], 'play-card', 0);
-        // this.players[1].cards.unshift(deck[14]);
-        // this.action(this.players[1], 'play-card', 0);
-
-        // this.restOfCards.push(deck[1]);
-        // this.action(this.players[2], 'draw-card', 0);
-        // this.action(this.players[2], 'play-card', 5);
-
-        // this.action(this.players[0], 'draw-card', 0);
-        // this.action(this.players[0], 'draw-card', 0);
-        // console.log(`${this.players[0].login} has ${this.players[0].cards.length} cards`);
-
         let s=[];for(let c of this.stack)s.push(c.name);console.log(s);
         // let cs=[];for(let c of this.players[0].cards)cs.push(c.name);console.log(cs);
         for(let p of this.players)if(p.expectedToMove)console.log(`${p.login} expected to move`);
@@ -70,7 +40,7 @@ class Makao extends Game {
     }
 
     action(player, action, arg) {
-        if (!this.started) {
+        if (!this.started || this.ended) {
             console.log(`can't perform action, game ${this.id} is't running`);
             return false;
         }
@@ -135,6 +105,9 @@ class Makao extends Game {
                     this.stack.push(card);
                     if (player.cards.length == 0) {
                         player.finished = true;
+                        if (this.players.length <= 1) {
+                            this.ended = true;
+                        }
                     }
                     player.saidMakao = false;
 
@@ -306,6 +279,7 @@ class Makao extends Game {
     getState(player) {
         let state = {};
         state.finished = player.finished;
+        state.gameEnded = this.ended;
         state.cards = player.cards;
         state.expectedToMove = player.expectedToMove;
         state.turnsToWait = player.turnsToWait;
@@ -334,6 +308,9 @@ class Makao extends Game {
     onRemovePlayer(user) {
         if (this.started && user.expectedToMove) {
             this.expectNextPlayer(user.index);
+        }
+        if (this.players.length <= 1) {
+            this.ended = true;
         }
     }
 }

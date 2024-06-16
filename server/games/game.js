@@ -2,6 +2,7 @@ class Game {
     constructor() {
         this.id = getId();
         this.started = false;
+        this.ended = false;
         this.table = {};
         this.players = [];
         this.getDeck = getPockerDeck;
