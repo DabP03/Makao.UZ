@@ -137,6 +137,7 @@
 
 	.player-list {
 		background-color: #181818;
+    min-height: 100px;
 		height: 20%;
 		display: flex;
 		justify-content: center;
@@ -144,6 +145,7 @@
 	}
 
 	.player-info {
+    height: 100%;
 		padding-left: 8px;
 		padding-right: 8px;
 	}
@@ -175,6 +177,7 @@
 
 	.card-hand {
 		background-color: #181818;
+    min-height: 90px;
 		height: 40%;
 		display: flex;
     justify-content: center;
