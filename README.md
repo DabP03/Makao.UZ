@@ -3,7 +3,7 @@
 - Node
 - NPM
 ## How to launch
-1. Clone this repository localy
+1. Clone this repository locally
 1. ``` npm install ``` 
 1. In one terminal
 ``` npm run server ```
