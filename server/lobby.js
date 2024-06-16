@@ -40,8 +40,8 @@ function addUser(socket, user) {
         socket.off('game-join', joinGame);
         console.log(`Users in lobby: ${users.map(obj => obj["login"])}`);
     }
-    socket.on('lobby-exit', removeUser);
     socket.on('disconnect', removeUser);
+    socket.on('lobby-exit', removeUser);
     socket.on('game-join', joinGame);
 
 
@@ -66,7 +66,7 @@ function addUser(socket, user) {
             socket.on("game-action", performGameAction);
 
             socket.on('disconnect', leaveGame); 
-            socket.on('leave-room', leaveGame);
+            socket.on('leave-room', leaveRoom);
     
             function startGame() {
                 if (game.canStart()) {
@@ -83,26 +83,26 @@ function addUser(socket, user) {
                 }
             }
 
+            function leaveGame() {
+                game.removePlayer(player);
+                io.to(game.id).emit('game-room-update', game.players);
+                socket.off('game-start', startGame);
+                socket.off("game-action", performGameAction);
+                socket.leave(game.id);
+
+            }
+
+            function leaveRoom() {
+                leaveGame();
+                addUser(socket, user);
+                
+            }
 
         } else {
             console.log(`No game with id ${id}`);
             socket.emit('game-join-answer', false);
         }
 
-        // function leaveGame() {
-        //     game.removePlayer(player);
-        //     io.to(game.id).emit('game-room-update', game.players);
-        //     socket.off('game-start', startGame);
-        //     socket.off("game-action", performGameAction);
-        //     users.push(user);
-        //     socket.join('lobby');
-        //     io.to('lobby').emit('lobby-update', users, getRoomList());
-        //     console.log(`Users in lobby: ${users.map(obj => obj["login"])}`);
-        //         socket.on('lobby-exit', removeUser);
-        //     socket.on('disconnect', removeUser);
-        //     socket.on('game-join', joinGame);
-
-        // }
     }
 }
 
